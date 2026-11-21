@@ -158,7 +158,7 @@
 		},
 		"synergyFilters": {
 			"ariaLabel": "Synergy filters",
-			"allTypes": "All duos",
+			"allTypes": "All synergies",
 			"synergistic": "Synergistic",
 			"antagonistic": "Antagonistic",
 			"personaLabel": "Filter by Persona",
