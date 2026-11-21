@@ -715,7 +715,7 @@
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
-					"name": "Top 3 des moments de ma vie",
+					"name": "Top 3 moments of my life",
 					"blocks": [{ "text": "Victor sets every opposing card ablaze, dealing 3d6 damage and applying 2 Burns to each of them." }]
 				},
 				{
