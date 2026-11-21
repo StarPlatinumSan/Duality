@@ -1,0 +1,792 @@
+{
+	"language": "en",
+	"languageName": "English",
+	"ui": {
+		"return": "Return",
+		"mainMenuAria": "Main menu",
+		"playAria": "Play",
+		"playMessage": "The Game is still in its Building Process, come back later.",
+		"ruleSectionsAria": "Rule sections",
+		"bestiarySectionsAria": "Bestiary sections",
+		"languageAria": "Change language",
+		"collection": "Collection",
+		"close": "Close",
+		"personaSheet": "Persona Sheet",
+		"personaSheetFor": "Persona sheet for {name}",
+		"persona": "Persona",
+		"healthPoints": "Health Points",
+		"hpShort": "HP",
+		"tweak": "Tweak",
+		"comingSoon": "Coming soon",
+		"personaComingSoon": "Persona coming soon",
+		"viewSheet": "View sheet",
+		"viewPersonaSheet": "View {name}'s sheet",
+		"portrait": "Portrait",
+		"fullArt": "Full Art",
+		"artworksFor": "Artwork for {name}",
+		"afterUltimate": "After the Ultimate",
+		"becomesInert": "{name} BECOMES INERT",
+		"staysActive": "{name} STAYS ACTIVE",
+		"fusion": "Fusion",
+		"carryBuff": "Carry Buff",
+		"supportNerf": "Support Nerf"
+	},
+	"menu": {
+		"play": "Play",
+		"rules": "Rules",
+		"bestiary": "Bestiary"
+	},
+	"rules": {
+		"eyebrow": "Rulebook",
+		"title": "Rules",
+		"sections": {
+			"cardTypes": {
+				"id": "card-types",
+				"number": "01",
+				"title": "Card types",
+				"cards": [
+					{
+						"title": "Persona cards",
+						"paragraphs": ["Persona cards represent the characters you control, such as Andrei, Samuel, Paul, Oscar, and Jad.", "Each Persona has:"],
+						"points": [
+							{ "term": "Health Points (HP)", "text": "measure resistance to damage." },
+							{ "term": "Tweak", "text": "is the resource used to activate abilities." },
+							{ "term": "Abilities", "text": "are unique to each Persona and may cost Tweak." },
+							{ "term": "Ultimate ability", "text": "is a powerful action that makes the Persona Inert after use." }
+						],
+						"callout": {
+							"title": "Inert state",
+							"text": "An Inert Persona permanently loses access to all abilities. It remains on the field, keeps its remaining HP, and may still take damage. It becomes an HP reserve and continues producing Tweak for the duo until eliminated."
+						}
+					},
+					{
+						"title": "Object cards",
+						"paragraphs": ["Objects, also called Items, improve the performance of your duo. They may reinforce abilities or support a particular strategy.", "Each player has 3 Object slots in a best of three match."]
+					},
+					{
+						"title": "Reaction cards",
+						"paragraphs": [
+							"Reactions are passive or situational effects obtained during the game. They may be used immediately after drawing or kept face down in the Reaction bank for an opponent's turn.",
+							"Each player has a maximum of 2 Reaction slots."
+						],
+						"note": "During an opponent's turn, a Reaction may be activated at any time. Only one Reaction may be used per opposing turn."
+					}
+				]
+			},
+			"duoBuilding": {
+				"id": "duo-building",
+				"number": "02",
+				"title": "Duo building",
+				"intro": "Two main strategies can be used to construct a duo.",
+				"strategies": [
+					{
+						"label": "Synergistic duo",
+						"title": "Synergy",
+						"text": "Pair two Personas whose abilities work effectively together. Use the three Object slots to strengthen their respective advantages. Both Personas collaborate to form a balanced unit and maximize their shared efficiency."
+					},
+					{
+						"label": "Antagonistic duo",
+						"title": "Carry and Support",
+						"text": "Pair Personas whose effects oppose one another. The Persona weakened by the interaction becomes the Support. The other becomes the Carry. The Carry deals most of the damage while the Support reinforces and maintains the strategy."
+					}
+				]
+			},
+			"turn": {
+				"id": "turn",
+				"number": "03",
+				"title": "Turn structure",
+				"intro": "A turn has three phases.",
+				"phases": [
+					{
+						"number": "1",
+						"title": "Actions",
+						"text": "The active player may spend accumulated Tweak to:",
+						"items": ["Activate Persona abilities.", "Use Objects.", "Perform actions allowed by controlled cards."]
+					},
+					{
+						"number": "2",
+						"title": "Tweak recovery",
+						"text": "At the start of the turn, the player gains Tweak equal to the combined Tweak of both Personas."
+					},
+					{
+						"number": "3",
+						"title": "Draw Reactions",
+						"text": "The player normally draws 1 Reaction at the end of the turn. It may be used immediately or placed face down in an available Reaction slot.",
+						"note": "If the player uses no abilities during the turn, they draw 2 Reaction cards instead of 1."
+					}
+				]
+			},
+			"reactions": {
+				"id": "using-reactions",
+				"number": "04",
+				"title": "Using Reactions",
+				"uses": [
+					{ "label": "Immediate", "text": "When a Reaction is drawn, the player may activate it immediately." },
+					{ "label": "Defensive", "text": "A Reaction kept in the bank may be activated during the opponent's turn, allowing intervention during enemy play." }
+				]
+			},
+			"lexicon": {
+				"id": "lexicon",
+				"number": "05",
+				"title": "Lexicon",
+				"entries": [
+					{ "term": "Tweak", "definition": "A resource comparable to mana in other card games, required to use certain abilities." },
+					{ "term": "Inert", "definition": "A Persona state that prevents all ability use while preserving remaining HP." },
+					{ "term": "Persona", "definition": "A playable character with HP, Tweak, and unique abilities." },
+					{ "term": "Carry", "definition": "The main Persona in a duo, responsible for most of its damage." },
+					{ "term": "Support", "definition": "A Persona focused on reinforcing or assisting a partner." },
+					{ "term": "Reaction", "definition": "A card activated immediately after drawing or in response to an opponent's action." },
+					{ "term": "BO3", "definition": "A best of three match format." }
+				]
+			}
+		}
+	},
+	"bestiary": {
+		"eyebrow": "Collection",
+		"title": "Bestiary",
+		"tabs": [
+			{ "id": "personas", "label": "Personas" },
+			{ "id": "objects", "label": "Objects" },
+			{ "id": "reactions", "label": "Reactions" },
+			{ "id": "synergies", "label": "Synergies" }
+		],
+		"personaView": {
+			"ariaLabel": "Persona display",
+			"grouped": "By class",
+			"all": "All Personas"
+		},
+		"personaGroups": [
+			{ "id": "tank", "label": "Tank", "personaIds": ["andrei", "paul", "gabriel", "jake"] },
+			{ "id": "dps", "label": "DPS", "personaIds": ["jesus", "xi", "marion", "jad"] },
+			{ "id": "assassin", "label": "Assassin", "personaIds": ["samuel", "yan", "victor"] },
+			{ "id": "support", "label": "Support", "personaIds": ["oscar", "alain"] }
+		],
+		"object": {
+			"type": "Object",
+			"badge": "Defensive",
+			"name": "Tenacity",
+			"description": "When a card suffers lethal damage, it stays at 1 HP instead of dying."
+		},
+		"reaction": {
+			"type": "Reaction",
+			"badge": "1 Tweak",
+			"name": "Cig",
+			"description": "Spend 1 Tweak to heal a card for 20 HP."
+		},
+		"synergies": [
+			{
+				"tone": "synergistic",
+				"label": "Natural combination",
+				"title": "Synergistic duo",
+				"description": "Both Personas directly reinforce their strengths and build a shared game plan.",
+				"synergies": [
+					{
+						"personas": [
+							{ "name": "Andrei", "role": "Area damage" },
+							{ "name": "Samuel", "role": "Resilience" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Yan", "role": "Pressure" },
+							{ "name": "Oscar", "role": "Recovery" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Gabriel", "role": "Tank" },
+							{ "name": "Jake", "role": "Tank" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Marion", "role": "DPS" },
+							{ "name": "Alain", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Andrei", "role": "Tank" },
+							{ "name": "Oscar", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Yan", "role": "Assassin" },
+							{ "name": "Xi", "role": "DPS" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Samuel", "role": "Assassin" },
+							{ "name": "Jake", "role": "Tank" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					}
+				]
+			},
+			{
+				"tone": "antagonistic",
+				"label": "Controlled risk",
+				"title": "Antagonistic duo",
+				"description": "One Persona exploits or endangers their partner. The Carry concentrates the power while the Support absorbs the cost.",
+				"synergies": [
+					{
+						"personas": [
+							{ "name": "Marion", "role": "Carry" },
+							{ "name": "Paul", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Jad", "role": "Carry" },
+							{ "name": "Xi", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Andrei", "role": "Carry" },
+							{ "name": "Yan", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Jake", "role": "Carry" },
+							{ "name": "Andrei", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Jesus", "role": "Carry" },
+							{ "name": "Jad", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					}
+				]
+			}
+		]
+	},
+	"personas": [
+		{
+			"id": "andrei",
+			"asset": "Andrei",
+			"name": "Andrei",
+			"subclass": "tank",
+			"health": 200,
+			"tweak": 5,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Alcohol Immunity",
+					"blocks": [{ "text": "Andrei is immune to alcohol effects." }, { "text": "When his HP reaches 50% or less (100 HP), he only takes 50% of incoming damage." }, { "text": "In addition, Tweak Créatif now rolls 3d6 instead of 2d6." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Fever",
+					"cost": "3 Tweak",
+					"blocks": [
+						{ "text": "Andrei flips a coin to determine his target:" },
+						{ "items": ["Heads: left opposing Persona.", "Tails: right opposing Persona."] },
+						{ "text": "Deals 25 damage, plus 10 additional damage for each Pisse par terre card in the discard pile." }
+					]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Tweak Créatif",
+					"cost": "6 Tweak",
+					"blocks": [
+						{ "text": "Andrei rolls 2d6 and gains Tweak equal to the result for the current turn." },
+						{ "text": "He then targets an opposing Persona and deals damage equal to twice the result." },
+						{ "label": "Active Passive", "text": "Roll 3d6 instead." }
+					]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Incident",
+					"blocks": [
+						{ "text": "Andrei unleashes all his creativity to write psychologically unbearable horrors.", "italic": true },
+						{ "text": "Every card on the field except Andrei takes 30 damage." },
+						{ "text": "After damage is applied, any card, including Andrei, with 50 HP or less is instantly eliminated." }
+					]
+				}
+			]
+		},
+		{
+			"id": "paul",
+			"asset": "Paul",
+			"name": "Paul",
+			"subclass": "tank",
+			"health": 180,
+			"tweak": 2,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Cig Enthusiast",
+					"blocks": [{ "text": "Paul loves cigs. At the start of each of his turns, he restores 10 HP." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Sang de Marseille",
+					"cost": "3 Tweak",
+					"blocks": [{ "text": "Deals 15 damage to both opposing Personas. He then draws a Reaction from the opponent's deck and discards it without using it." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Photographer",
+					"cost": "2 Tweak",
+					"blocks": [{ "text": "Paul draws attention to himself and gains Tunnel. During the opponent's next turn, the enemy must target Paul with their attacks. Each use increases this ability's cost by 1 Tweak." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Cig King",
+					"blocks": [{ "text": "Paul smokes his best cigarette.", "italic": true }, { "text": "Restores 100% of his HP and draws 2 Reaction cards, which he plays immediately." }, { "text": "This Ultimate may be used as a Reaction when Paul dies." }]
+				}
+			]
+		},
+		{
+			"id": "samuel",
+			"asset": "Samuel",
+			"name": "Samuel",
+			"subclass": "assassin",
+			"health": 100,
+			"tweak": 4,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "QUOIII",
+					"blocks": [{ "text": "When Samuel is eliminated, roll 1d6 at the start of the next turn:" }, { "items": ["1-3: No effect.", "4: Returns to life with 1 HP.", "5: Returns to life with 50 HP.", "6: Returns to life with 100 HP."] }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Math Sucker",
+					"cost": "3 Tweak",
+					"blocks": [{ "text": "Samuel deals 10 damage to a Persona of his choice." }, { "text": "Each use increases this ability's damage by an additional 5." }, { "label": "Progression", "text": "10, 15, 20, 25, 30..." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Cheers!",
+					"cost": "2 Tweak",
+					"blocks": [
+						{ "text": "Samuel chugs his beer and throws it, dealing 20 damage to an opposing Persona of his choice." },
+						{ "text": "He may then choose to flip a coin once:" },
+						{ "items": ["Heads: Deals 40 additional damage to the target.", "Tails: Samuel takes 20 damage."] },
+						{ "text": "The coin flip is optional." }
+					]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Mush Live",
+					"blocks": [
+						{ "text": "Samuel pops his best mush.", "italic": true },
+						{ "text": "For this turn, all his abilities cost 0 Tweak." },
+						{ "label": "Math Sucker", "text": "May be used without limit. After the first use, Samuel takes damage equal to the damage dealt to his target." },
+						{ "label": "Cheers!", "text": "Samuel may flip the coin as many times as he wants until he gets Tails. Each Heads deals 20 additional damage. The first Tails deals 20 damage to Samuel and ends the flips." }
+					]
+				}
+			]
+		},
+		{
+			"id": "oscar",
+			"asset": "Oscar",
+			"name": "Oscar",
+			"subclass": "support",
+			"health": 130,
+			"tweak": 1,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Fox",
+					"blocks": [{ "text": "Once per game, Oscar may activate this Passive as a Reaction to an attack or ability that hits him. He completely negates that attack or ability's damage." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Little Prince",
+					"cost": "1 Tweak",
+					"blocks": [
+						{ "text": "Oscar chooses one of two effects:" },
+						{ "items": ["Option 1: Deal 10 damage to every card on the field, including himself and his ally.", "Option 2: Restore 10 HP and also heal an opposing Persona of his choice for 10 HP."] }
+					]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Bunny Hop",
+					"cost": "10 Tweak",
+					"blocks": [{ "text": "Oscar performs a bunny hop on a Persona of his choice, dealing 50 damage." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Traveler",
+					"blocks": [{ "text": "Oscar leaves on a journey.", "italic": true }, { "text": "If his ally is Inert, they immediately become Active again and regain access to all abilities." }]
+				}
+			]
+		},
+		{
+			"id": "jad",
+			"asset": "Jad",
+			"name": "Jad",
+			"subclass": "dps",
+			"health": 160,
+			"tweak": 3,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Shot de Tweaka",
+					"blocks": [{ "text": "Because he lacks social cues, Jad is immune to every effect from Reaction cards." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "The GOAT Above the GOATs",
+					"cost": "Variable cost",
+					"blocks": [
+						{ "text": "Jad wants to fit in, so he imitates others.", "italic": true },
+						{ "text": "Jad may copy and use any ability from a Persona currently in play." },
+						{ "text": "The copied ability costs 1 additional Tweak." },
+						{ "label": "Final cost", "text": "Original cost +1 Tweak." }
+					]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Vape Master",
+					"cost": "5 Tweak",
+					"blocks": [{ "text": "Jad vapes so much that everyone completely forgets about him. He cannot be targeted for 1 turn." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Grape",
+					"blocks": [
+						{ "text": "Jad ruins all the effort he put into his glow-up.", "italic": true },
+						{ "label": "Ally", "text": "Deals 60 damage to his own partner." },
+						{ "label": "Opponents", "text": "Both opposing Personas are stunned for 2 turns." },
+						{ "label": "Special interaction", "text": "If Xi is in the game, she is instantly eliminated." }
+					]
+				}
+			]
+		},
+		{
+			"id": "marion",
+			"asset": "Marion",
+			"name": "Marion",
+			"subclass": "dps",
+			"health": 170,
+			"tweak": 0,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Expanded Inventory",
+					"blocks": [{ "text": "Marion gives her team a fourth Object slot in its deck instead of the usual three." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Rant",
+					"cost": "2 Tweak",
+					"blocks": [
+						{ "text": "Marion deals 5 damage to a target." },
+						{ "text": "Damage increases by 5 for each Reaction card currently on the field, allied or opposing." },
+						{ "label": "If her ally dies", "items": ["Cost reduced to 0 Tweak.", "Each use now costs 10 HP.", "The ability's final damage is doubled."] }
+					]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Ethyl Coma",
+					"cost": "15 Tweak",
+					"blocks": [{ "text": "Marion chooses an opposing Persona and removes one of their abilities or their Passive. In exchange, Marion is stunned for 1 turn." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Negativity",
+					"blocks": [
+						{ "text": "Marion unleashes all her negativity in an unbearable rant.", "italic": true },
+						{ "text": "Every other card on the field, allied and opposing, takes psychic damage equal to 50% of its remaining HP." },
+						{ "text": "Marion is unaffected." }
+					]
+				}
+			]
+		},
+		{
+			"id": "xi",
+			"asset": "Xi",
+			"name": "Xi",
+			"subclass": "dps",
+			"health": 140,
+			"tweak": 1,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Yellow",
+					"blocks": [{ "text": "Whenever Xi takes damage, she gains 1 Tweak." }, { "text": "If the damage comes from Andrei, she gains 2 Tweak instead." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Jing",
+					"cost": "1 Tweak",
+					"blocks": [{ "text": "Xi deals 10 damage." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Ping",
+					"cost": "2 Tweak",
+					"blocks": [{ "text": "Xi rolls 4d6 and deals a burst of damage equal to the sum of the four dice." }, { "text": "She then restores HP equal to the damage dealt." }, { "label": "Damage and healing", "text": "4 to 24 HP." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "HONG KONG",
+					"blocks": [
+						{ "text": "Xi has a credit bank starting at 10 credits." },
+						{ "text": "At the start of each of her turns, she accumulates 10 additional credits." },
+						{ "text": "When she activates her Ultimate, Xi spends all her credits and may distribute them freely between:", "items": ["Damage: 1 credit for 1 damage.", "Healing: 1 credit for 1 HP restored."] },
+						{ "label": "Special interaction", "text": "If Xi is eliminated by Jad's Grape Ultimate, she may still activate HONG KONG as a Reaction and spend her accumulated credits." }
+					]
+				}
+			]
+		},
+		{
+			"id": "yan",
+			"asset": "Yan",
+			"name": "Yan",
+			"subclass": "assassin",
+			"health": 110,
+			"tweak": 3,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Impulsive Thinking",
+					"blocks": [{ "text": "Yan unlocks a third Reaction slot for his team instead of the usual two." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Far-right Punch",
+					"cost": "2 Tweak",
+					"blocks": [{ "text": "Yan deals damage equal to 50% of his missing HP." }, { "label": "Example", "text": "At 50 HP out of 110, he is missing 60 HP and therefore deals 30 damage." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Raving",
+					"cost": "4 Tweak",
+					"blocks": [{ "items": ["Yan deals 20 damage to both opposing Personas.", "OR: Yan deals 30 damage to a Persona of his choice."] }, { "text": "He then gains Tunnel." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Republicanism",
+					"blocks": [{ "text": "Yan sacrifices every Object owned by his team." }, { "text": "In exchange, he resurrects his ally with 100% of their HP." }]
+				}
+			]
+		},
+		{
+			"id": "alain",
+			"asset": "Alain",
+			"name": "Alain",
+			"subclass": "support",
+			"health": 120,
+			"tweak": 2,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Tapp",
+					"blocks": [{ "text": "On every turn during which Alain is not targeted, Tapp deals 5 damage to each opposing card." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Security",
+					"cost": "7 Tweak",
+					"blocks": [{ "text": "Alain Tapp transfers 25 HP to his ally and applies Tunnel to them." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Cryptography",
+					"cost": "5 Tweak",
+					"blocks": [{ "text": "Alain Tapp intercepts the next attack that would not target him. He takes the damage in place of the original target." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Security Breach",
+					"blocks": [{ "text": "A breach hacks the system.", "italic": true }, { "text": "Every Reaction card on the field is removed." }, { "text": "Every opposing Object is replaced with another random Object." }]
+				}
+			]
+		},
+		{
+			"id": "jesus",
+			"asset": "Jesus",
+			"name": "Jesus",
+			"subclass": "dps",
+			"health": 150,
+			"tweak": 3,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Bet",
+					"blocks": [
+						{ "text": "When Jesus is below half HP, he may sacrifice up to 15 HP to increase the damage of Gambling's Power at a 1:1 ratio: each HP sacrificed adds 1 damage, for a maximum of +15 damage. The amount must be chosen before rolling." }
+					]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Gambling's Power",
+					"cost": "3 Tweak",
+					"blocks": [
+						{ "text": "Jesus rolls 1d6 to determine his target:" },
+						{ "items": ["1-2: Deals 35 damage to his ally if they are still alive.", "3-4: Deals 35 damage to the left opposing Persona.", "5-6: Deals 35 damage to the right opposing Persona."] }
+					]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Jexa's Will",
+					"cost": "8 Tweak",
+					"blocks": [{ "text": "Jesus deals 20 damage to himself and destroys 1 opposing Object." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Tarzan's Soul",
+					"blocks": [{ "text": "For the next 5 turns, Jesus has a 50% chance each turn to be immune to all damage." }, { "text": "In addition, when he rolls a 6 for Gambling's Power, he chooses his target and deals 70 damage instead." }]
+				}
+			]
+		},
+		{
+			"id": "gabriel",
+			"asset": "Gabriel",
+			"name": "Gabriel",
+			"subclass": "tank",
+			"health": 190,
+			"tweak": 1,
+			"becomesInert": false,
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Draw Me!",
+					"blocks": [{ "text": "You cannot use Reactions while Gabriel is alive. You consume them through 3D Eye." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "2D Art",
+					"cost": "5 Eyes",
+					"blocks": [{ "text": "Gabriel slashes with his pen, dealing 20 damage to the card on his left." }, { "text": "He deals damage equal to 5 times the number of Eyes he currently holds to the card on his right." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "3D Eye",
+					"cost": "5 Tweak",
+					"blocks": [{ "text": "Gabriel draws a Reaction, then sends it to the discard pile without using it." }, { "text": "He gains Eyes equal to the card's rarity: 1 for Common, 2 for Rare, 3 for Epic, and 5 for Legendary." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "4D Artist",
+					"cost": "20 Eyes",
+					"blocks": [
+						{ "text": "Gabriel redraws the rules.", "italic": true },
+						{ "text": "Gabriel may replace any card's ability or Ultimate with an ability or Ultimate from any other card on the field, excluding himself." },
+						{ "text": "Gabriel does not become Inert after using this ability." }
+					]
+				}
+			]
+		},
+		{
+			"id": "jake",
+			"asset": "Jake",
+			"name": "Jake",
+			"subclass": "tank",
+			"health": 0,
+			"tweak": 0,
+			"abilities": [],
+			"placeholder": true
+		},
+		{
+			"id": "victor",
+			"asset": "Victor",
+			"name": "Victor",
+			"subclass": "assassin",
+			"health": "?",
+			"tweak": "?",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Coming Soon ...",
+					"blocks": [{ "text": "Coming Soon ..." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Coming Soon ...",
+					"blocks": [{ "text": "Coming Soon ..." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Coming Soon ...",
+					"blocks": [{ "text": "Coming Soon ..." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Coming Soon ...",
+					"blocks": [{ "text": "Coming Soon ..." }]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,52 @@
+:root {
+  font-family: "Syne Mono", monospace;
+  font-weight: 400;
+  color: #fff4df;
+  background: #5b1024;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  scroll-behavior: smooth;
+  background: #5b1024;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #e2bd83;
+  outline-offset: 4px;
+}
+
+::selection {
+  color: #52101f;
+  background: #e4c18a;
+}
+
+#root {
+  min-height: 100vh;
+}
