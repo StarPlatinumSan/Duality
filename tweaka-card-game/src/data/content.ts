@@ -1,12 +1,13 @@
 import en from "./en.json";
 import fr from "./fr.json";
+import { personaDefinitions, type AbilityKind, type PersonaCost, type PersonaSubclass } from "./personas";
+
+export type { AbilityKind, PersonaSubclass } from "./personas";
 
 export type Language = "en" | "fr";
 export type View = "menu" | "play" | "rules" | "bestiary";
 export type BestiarySection = "personas" | "objects" | "reactions" | "synergies";
-export type AbilityKind = "passive" | "ability1" | "ability2" | "ultimate";
 export type SynergyTone = "synergistic" | "antagonistic";
-export type PersonaSubclass = "tank" | "dps" | "assassin" | "support";
 
 export type PersonaAbilityBlock = {
 	label?: string;
@@ -32,6 +33,7 @@ export type Persona = {
 	tweak: number | string;
 	abilities: PersonaAbility[];
 	becomesInert?: boolean;
+	ultimateAftermath?: string;
 	placeholder?: boolean;
 };
 
@@ -76,6 +78,7 @@ export type GameContent = {
 		healthPoints: string;
 		hpShort: string;
 		tweak: string;
+		eyes: string;
 		comingSoon: string;
 		personaComingSoon: string;
 		viewSheet: string;
@@ -141,7 +144,61 @@ export type GameContent = {
 	personas: Persona[];
 };
 
+type LocalizedPersona = {
+	id: string;
+	abilities: PersonaAbility[];
+	ultimateAftermath?: string;
+};
+
+type LocalizedGameContent = Omit<GameContent, "bestiary" | "personas"> & {
+	bestiary: Omit<GameContent["bestiary"], "personaGroups"> & {
+		personaGroups: { id: PersonaSubclass; label: string }[];
+	};
+	personas: LocalizedPersona[];
+};
+
+function formatCost(cost: PersonaCost, content: LocalizedGameContent) {
+	const resource = cost.resource === "eyes" ? content.ui.eyes : content.ui.tweak;
+	return `${cost.amount} ${resource}`;
+}
+
+function createContent(source: LocalizedGameContent): GameContent {
+	const localizedPersonas = new Map(source.personas.map((persona) => [persona.id, persona]));
+
+	const personas = personaDefinitions.map((definition): Persona => {
+		const localizedPersona = localizedPersonas.get(definition.id);
+		if (!localizedPersona) throw new Error(`Missing localized Persona content for ${definition.id} in ${source.language}.`);
+
+		const { classOrder: _classOrder, costs, ...rawPersona } = definition;
+		void _classOrder;
+
+		return {
+			...rawPersona,
+			abilities: localizedPersona.abilities.map((ability) => {
+				const cost = costs?.[ability.kind];
+				return { ...ability, cost: cost ? formatCost(cost, source) : ability.cost };
+			}),
+			ultimateAftermath: localizedPersona.ultimateAftermath,
+		};
+	});
+
+	return {
+		...source,
+		bestiary: {
+			...source.bestiary,
+			personaGroups: source.bestiary.personaGroups.map((group) => ({
+				...group,
+				personaIds: personaDefinitions
+					.filter((persona) => persona.subclass === group.id)
+					.sort((firstPersona, secondPersona) => firstPersona.classOrder - secondPersona.classOrder)
+					.map((persona) => persona.id),
+			})),
+		},
+		personas,
+	};
+}
+
 export const contentByLanguage: Record<Language, GameContent> = {
-	en: en as GameContent,
-	fr: fr as GameContent,
+	en: createContent(en as unknown as LocalizedGameContent),
+	fr: createContent(fr as unknown as LocalizedGameContent),
 };

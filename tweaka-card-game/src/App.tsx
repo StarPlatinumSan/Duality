@@ -338,7 +338,7 @@ function PersonaCardView({ persona, content, language }: { persona: Persona; con
 
 				<footer className={`persona-inert${persona.becomesInert === false ? " stays-active" : ""}`}>
 					<span>{content.ui.afterUltimate}</span>
-					<strong>{formatName(persona.becomesInert === false ? content.ui.staysActive : content.ui.becomesInert, persona.name.toLocaleUpperCase(language === "fr" ? "fr-FR" : "en-US"))}</strong>
+					<strong>{persona.ultimateAftermath ?? formatName(persona.becomesInert === false ? content.ui.staysActive : content.ui.becomesInert, persona.name.toLocaleUpperCase(language === "fr" ? "fr-FR" : "en-US"))}</strong>
 				</footer>
 			</div>
 		</article>

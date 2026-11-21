@@ -17,6 +17,7 @@
 		"healthPoints": "Health Points",
 		"hpShort": "HP",
 		"tweak": "Tweak",
+		"eyes": "Eyes",
 		"comingSoon": "Coming soon",
 		"personaComingSoon": "Persona coming soon",
 		"viewSheet": "View sheet",
@@ -156,16 +157,16 @@
 			"all": "All Personas"
 		},
 		"personaGroups": [
-			{ "id": "tank", "label": "Tank", "personaIds": ["andrei", "paul", "gabriel", "jake"] },
-			{ "id": "dps", "label": "DPS", "personaIds": ["jesus", "xi", "marion", "jad"] },
-			{ "id": "assassin", "label": "Assassin", "personaIds": ["samuel", "yan", "victor"] },
-			{ "id": "support", "label": "Support", "personaIds": ["oscar", "alain"] }
+			{ "id": "tank", "label": "Tank" },
+			{ "id": "dps", "label": "DPS" },
+			{ "id": "assassin", "label": "Assassin" },
+			{ "id": "support", "label": "Support" }
 		],
 		"object": {
 			"type": "Object",
 			"badge": "Defensive",
 			"name": "Tenacity",
-			"description": "When a card suffers lethal damage, it stays at 1 HP instead of dying."
+			"description": "When a card suffers lethal damage, it stays at 1 HP instead of dying. Single use."
 		},
 		"reaction": {
 			"type": "Reaction",
@@ -291,23 +292,17 @@
 	"personas": [
 		{
 			"id": "andrei",
-			"asset": "Andrei",
-			"name": "Andrei",
-			"subclass": "tank",
-			"health": 200,
-			"tweak": 5,
 			"abilities": [
 				{
 					"kind": "passive",
 					"label": "Passive",
-					"name": "Alcohol Immunity",
-					"blocks": [{ "text": "Andrei is immune to alcohol effects." }, { "text": "When his HP reaches 50% or less (100 HP), he only takes 50% of incoming damage." }, { "text": "In addition, Tweak Créatif now rolls 3d6 instead of 2d6." }]
+					"name": "Deflect",
+					"blocks": [{ "text": "Whenever Andrei is hit by an attack, he reflects 20% of the damage taken back to the attacker." }]
 				},
 				{
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Fever",
-					"cost": "3 Tweak",
 					"blocks": [
 						{ "text": "Andrei flips a coin to determine his target:" },
 						{ "items": ["Heads: left opposing Persona.", "Tails: right opposing Persona."] },
@@ -318,11 +313,10 @@
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Tweak Créatif",
-					"cost": "6 Tweak",
 					"blocks": [
-						{ "text": "Andrei rolls 2d6 and gains Tweak equal to the result for the current turn." },
-						{ "text": "He then targets an opposing Persona and deals damage equal to twice the result." },
-						{ "label": "Active Passive", "text": "Roll 3d6 instead." }
+						{ "text": "Andrei rolls 2d6 and gains Tweak equal to the sum for the current turn." },
+						{ "text": "He then targets an opposing Persona and deals damage equal to 3 times the sum rolled." },
+						{ "label": "At 50 HP or less", "text": "Roll 3d6 instead." }
 					]
 				},
 				{
@@ -332,18 +326,14 @@
 					"blocks": [
 						{ "text": "Andrei unleashes all his creativity to write psychologically unbearable horrors.", "italic": true },
 						{ "text": "Every card on the field except Andrei takes 30 damage." },
-						{ "text": "After damage is applied, any card, including Andrei, with 50 HP or less is instantly eliminated." }
+						{ "text": "After damage is applied, any card, including Andrei, with 50 HP or less is instantly eliminated." },
+						{ "text": "Time then stops for everyone except Andrei. Every other card, including his ally, suffers STUN for 1 turn." }
 					]
 				}
 			]
 		},
 		{
 			"id": "paul",
-			"asset": "Paul",
-			"name": "Paul",
-			"subclass": "tank",
-			"health": 180,
-			"tweak": 2,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -355,14 +345,12 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Sang de Marseille",
-					"cost": "3 Tweak",
 					"blocks": [{ "text": "Deals 15 damage to both opposing Personas. He then draws a Reaction from the opponent's deck and discards it without using it." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Photographer",
-					"cost": "2 Tweak",
 					"blocks": [{ "text": "Paul draws attention to himself and gains Tunnel. During the opponent's next turn, the enemy must target Paul with their attacks. Each use increases this ability's cost by 1 Tweak." }]
 				},
 				{
@@ -375,11 +363,6 @@
 		},
 		{
 			"id": "samuel",
-			"asset": "Samuel",
-			"name": "Samuel",
-			"subclass": "assassin",
-			"health": 100,
-			"tweak": 4,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -390,15 +373,13 @@
 				{
 					"kind": "ability1",
 					"label": "Ability 1",
-					"name": "Math Sucker",
-					"cost": "3 Tweak",
+					"name": "Math Adept",
 					"blocks": [{ "text": "Samuel deals 10 damage to a Persona of his choice." }, { "text": "Each use increases this ability's damage by an additional 5." }, { "label": "Progression", "text": "10, 15, 20, 25, 30..." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Cheers!",
-					"cost": "2 Tweak",
 					"blocks": [
 						{ "text": "Samuel chugs his beer and throws it, dealing 20 damage to an opposing Persona of his choice." },
 						{ "text": "He may then choose to flip a coin once:" },
@@ -413,7 +394,7 @@
 					"blocks": [
 						{ "text": "Samuel pops his best mush.", "italic": true },
 						{ "text": "For this turn, all his abilities cost 0 Tweak." },
-						{ "label": "Math Sucker", "text": "May be used without limit. After the first use, Samuel takes damage equal to the damage dealt to his target." },
+						{ "label": "Math Adept", "text": "May be used without limit. After the first use, Samuel takes damage equal to the damage dealt to his target." },
 						{ "label": "Cheers!", "text": "Samuel may flip the coin as many times as he wants until he gets Tails. Each Heads deals 20 additional damage. The first Tails deals 20 damage to Samuel and ends the flips." }
 					]
 				}
@@ -421,11 +402,6 @@
 		},
 		{
 			"id": "oscar",
-			"asset": "Oscar",
-			"name": "Oscar",
-			"subclass": "support",
-			"health": 130,
-			"tweak": 1,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -437,7 +413,6 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Little Prince",
-					"cost": "1 Tweak",
 					"blocks": [
 						{ "text": "Oscar chooses one of two effects:" },
 						{ "items": ["Option 1: Deal 10 damage to every card on the field, including himself and his ally.", "Option 2: Restore 10 HP and also heal an opposing Persona of his choice for 10 HP."] }
@@ -447,7 +422,6 @@
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Bunny Hop",
-					"cost": "10 Tweak",
 					"blocks": [{ "text": "Oscar performs a bunny hop on a Persona of his choice, dealing 50 damage." }]
 				},
 				{
@@ -460,11 +434,6 @@
 		},
 		{
 			"id": "jad",
-			"asset": "Jad",
-			"name": "Jad",
-			"subclass": "dps",
-			"health": 160,
-			"tweak": 3,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -488,7 +457,6 @@
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Vape Master",
-					"cost": "5 Tweak",
 					"blocks": [{ "text": "Jad vapes so much that everyone completely forgets about him. He cannot be targeted for 1 turn." }]
 				},
 				{
@@ -506,11 +474,6 @@
 		},
 		{
 			"id": "marion",
-			"asset": "Marion",
-			"name": "Marion",
-			"subclass": "dps",
-			"health": 170,
-			"tweak": 0,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -522,7 +485,6 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Rant",
-					"cost": "2 Tweak",
 					"blocks": [
 						{ "text": "Marion deals 5 damage to a target." },
 						{ "text": "Damage increases by 5 for each Reaction card currently on the field, allied or opposing." },
@@ -533,7 +495,6 @@
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Ethyl Coma",
-					"cost": "15 Tweak",
 					"blocks": [{ "text": "Marion chooses an opposing Persona and removes one of their abilities or their Passive. In exchange, Marion is stunned for 1 turn." }]
 				},
 				{
@@ -550,11 +511,6 @@
 		},
 		{
 			"id": "xi",
-			"asset": "Xi",
-			"name": "Xi",
-			"subclass": "dps",
-			"health": 140,
-			"tweak": 1,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -566,14 +522,12 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Jing",
-					"cost": "1 Tweak",
 					"blocks": [{ "text": "Xi deals 10 damage." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Ping",
-					"cost": "2 Tweak",
 					"blocks": [{ "text": "Xi rolls 4d6 and deals a burst of damage equal to the sum of the four dice." }, { "text": "She then restores HP equal to the damage dealt." }, { "label": "Damage and healing", "text": "4 to 24 HP." }]
 				},
 				{
@@ -591,11 +545,6 @@
 		},
 		{
 			"id": "yan",
-			"asset": "Yan",
-			"name": "Yan",
-			"subclass": "assassin",
-			"health": 110,
-			"tweak": 3,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -607,14 +556,12 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Far-right Punch",
-					"cost": "2 Tweak",
 					"blocks": [{ "text": "Yan deals damage equal to 50% of his missing HP." }, { "label": "Example", "text": "At 50 HP out of 110, he is missing 60 HP and therefore deals 30 damage." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Raving",
-					"cost": "4 Tweak",
 					"blocks": [{ "items": ["Yan deals 20 damage to both opposing Personas.", "OR: Yan deals 30 damage to a Persona of his choice."] }, { "text": "He then gains Tunnel." }]
 				},
 				{
@@ -627,11 +574,6 @@
 		},
 		{
 			"id": "alain",
-			"asset": "Alain",
-			"name": "Alain",
-			"subclass": "support",
-			"health": 120,
-			"tweak": 2,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -643,14 +585,12 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Security",
-					"cost": "7 Tweak",
 					"blocks": [{ "text": "Alain Tapp transfers 25 HP to his ally and applies Tunnel to them." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Cryptography",
-					"cost": "5 Tweak",
 					"blocks": [{ "text": "Alain Tapp intercepts the next attack that would not target him. He takes the damage in place of the original target." }]
 				},
 				{
@@ -663,11 +603,6 @@
 		},
 		{
 			"id": "jesus",
-			"asset": "Jesus",
-			"name": "Jesus",
-			"subclass": "dps",
-			"health": 150,
-			"tweak": 3,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -681,7 +616,6 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Gambling's Power",
-					"cost": "3 Tweak",
 					"blocks": [
 						{ "text": "Jesus rolls 1d6 to determine his target:" },
 						{ "items": ["1-2: Deals 35 damage to his ally if they are still alive.", "3-4: Deals 35 damage to the left opposing Persona.", "5-6: Deals 35 damage to the right opposing Persona."] }
@@ -691,25 +625,18 @@
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Jexa's Will",
-					"cost": "8 Tweak",
 					"blocks": [{ "text": "Jesus deals 20 damage to himself and destroys 1 opposing Object." }]
 				},
 				{
 					"kind": "ultimate",
 					"label": "Ultimate",
-					"name": "Tarzan's Soul",
+					"name": "Tarzan's Potential",
 					"blocks": [{ "text": "For the next 5 turns, Jesus has a 50% chance each turn to be immune to all damage." }, { "text": "In addition, when he rolls a 6 for Gambling's Power, he chooses his target and deals 70 damage instead." }]
 				}
 			]
 		},
 		{
 			"id": "gabriel",
-			"asset": "Gabriel",
-			"name": "Gabriel",
-			"subclass": "tank",
-			"health": 190,
-			"tweak": 1,
-			"becomesInert": false,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -721,21 +648,18 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "2D Art",
-					"cost": "5 Eyes",
 					"blocks": [{ "text": "Gabriel slashes with his pen, dealing 20 damage to the card on his left." }, { "text": "He deals damage equal to 5 times the number of Eyes he currently holds to the card on his right." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "3D Eye",
-					"cost": "5 Tweak",
 					"blocks": [{ "text": "Gabriel draws a Reaction, then sends it to the discard pile without using it." }, { "text": "He gains Eyes equal to the card's rarity: 1 for Common, 2 for Rare, 3 for Epic, and 5 for Legendary." }]
 				},
 				{
 					"kind": "ultimate",
 					"label": "Ultimate",
 					"name": "4D Artist",
-					"cost": "20 Eyes",
 					"blocks": [
 						{ "text": "Gabriel redraws the rules.", "italic": true },
 						{ "text": "Gabriel may replace any card's ability or Ultimate with an ability or Ultimate from any other card on the field, excluding himself." },
@@ -746,47 +670,67 @@
 		},
 		{
 			"id": "jake",
-			"asset": "Jake",
-			"name": "Jake",
-			"subclass": "tank",
-			"health": 0,
-			"tweak": 0,
-			"abilities": [],
-			"placeholder": true
-		},
-		{
-			"id": "victor",
-			"asset": "Victor",
-			"name": "Victor",
-			"subclass": "assassin",
-			"health": "?",
-			"tweak": "?",
 			"abilities": [
 				{
 					"kind": "passive",
 					"label": "Passive",
-					"name": "Coming Soon ...",
-					"blocks": [{ "text": "Coming Soon ..." }]
+					"name": "Grown in the UK",
+					"blocks": [{ "text": "When Jake reaches 100 HP or less, he only takes 50% of incoming damage." }]
 				},
 				{
 					"kind": "ability1",
 					"label": "Ability 1",
-					"name": "Coming Soon ...",
-					"blocks": [{ "text": "Coming Soon ..." }]
+					"name": "Stab",
+					"blocks": [{ "text": "Jake stabs 6 times in a row. Roll 6d6; the sum of all rolls is the damage dealt to his chosen target." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Ability 2",
-					"name": "Coming Soon ...",
-					"blocks": [{ "text": "Coming Soon ..." }]
+					"name": "Titan",
+					"blocks": [{ "text": "Jake applies Tunnel to himself. Until the end of the turn, he reflects 100% of the damage dealt to him back to its source." }]
 				},
 				{
 					"kind": "ultimate",
 					"label": "Ultimate",
-					"name": "Coming Soon ...",
-					"blocks": [{ "text": "Coming Soon ..." }]
+					"name": "Copypasta",
+					"blocks": [{ "text": "Jake writes horrors about a Persona of his choice. Roll 10d6 + 30; the total is the damage he deals to that Persona." }]
 				}
 			]
+		},
+		{
+			"id": "victor",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "C’est chaud frérot",
+					"blocks": [{ "text": "Victor’s attacks apply Burns. Each Burn deals 2 damage per turn for 2 turns." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Feu",
+					"blocks": [{ "text": "Victor deals 15 damage to a card of his choice and applies 3 Burns to it." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Top 3 des moments de ma vie",
+					"blocks": [{ "text": "Victor sets every opposing card ablaze, dealing 3d6 damage and applying 2 Burns to each of them." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Incendie",
+					"blocks": [
+						{ "text": "Victor incinerates the field and burns all of his Objects.", "italic": true },
+						{ "text": "Each opposing Persona and Victor’s ally take 30 fire damage, plus 5 damage for each active Burn on that card." },
+						{ "text": "All Burns are then removed from every card." },
+						{ "text": "If at least one card dies in the fire, Victor does not become Inert." }
+					]
+				}
+			],
+			"ultimateAftermath": "VICTOR BECOMES INERT UNLESS AT LEAST ONE CARD DIES IN THE FIRE"
 		}
 	]
 }

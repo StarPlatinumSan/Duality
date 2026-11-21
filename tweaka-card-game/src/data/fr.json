@@ -17,6 +17,7 @@
 		"healthPoints": "Points de vie",
 		"hpShort": "PV",
 		"tweak": "Tweak",
+		"eyes": "Yeux",
 		"comingSoon": "À venir",
 		"personaComingSoon": "Persona à venir",
 		"viewSheet": "Voir la fiche",
@@ -159,16 +160,16 @@
 			"all": "Toutes les Personas"
 		},
 		"personaGroups": [
-			{ "id": "tank", "label": "Tank", "personaIds": ["andrei", "paul", "gabriel", "jake"] },
-			{ "id": "dps", "label": "DPS", "personaIds": ["jesus", "xi", "marion", "jad"] },
-			{ "id": "assassin", "label": "Assassin", "personaIds": ["samuel", "yan", "victor"] },
-			{ "id": "support", "label": "Support", "personaIds": ["oscar", "alain"] }
+			{ "id": "tank", "label": "Tank" },
+			{ "id": "dps", "label": "DPS" },
+			{ "id": "assassin", "label": "Assassin" },
+			{ "id": "support", "label": "Support" }
 		],
 		"object": {
 			"type": "Objet",
 			"badge": "Défensif",
 			"name": "Ténacité",
-			"description": "Lorsqu’une carte subit des dégâts létaux, elle reste à 1 PV au lieu de mourir."
+			"description": "Lorsqu’une carte subit des dégâts létaux, elle reste à 1 PV au lieu de mourir. Usage unique."
 		},
 		"reaction": {
 			"type": "Réaction",
@@ -294,27 +295,17 @@
 	"personas": [
 		{
 			"id": "andrei",
-			"asset": "Andrei",
-			"name": "Andrei",
-			"subclass": "tank",
-			"health": 200,
-			"tweak": 5,
 			"abilities": [
 				{
 					"kind": "passive",
 					"label": "Passif",
-					"name": "Alcohol Immunity",
-					"blocks": [
-						{ "text": "Andrei est immunisé aux effets de l’alcool." },
-						{ "text": "Lorsque ses PV atteignent 50 % ou moins (100 PV), il ne subit plus que 50 % des dégâts reçus." },
-						{ "text": "De plus, Tweak Créatif lance désormais 3d6 au lieu de 2d6." }
-					]
+					"name": "Deflect",
+					"blocks": [{ "text": "Chaque fois qu’Andrei est touché par une attaque, il renvoie à l’attaquant 20 % des dégâts subis." }]
 				},
 				{
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Fever",
-					"cost": "3 Tweak",
 					"blocks": [
 						{ "text": "Andrei lance une pièce pour déterminer sa cible :" },
 						{ "items": ["Pile : Persona adverse de gauche.", "Face : Persona adverse de droite."] },
@@ -325,11 +316,10 @@
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Tweak Créatif",
-					"cost": "6 Tweak",
 					"blocks": [
-						{ "text": "Andrei lance 2d6 et récupère autant de Tweak que le résultat pour le tour en cours." },
-						{ "text": "Il cible ensuite une Persona adverse et lui inflige des dégâts équivalents au double du résultat." },
-						{ "label": "Passif actif", "text": "Lance 3d6 à la place." }
+						{ "text": "Andrei lance 2d6 et récupère autant de Tweak que la somme obtenue pour le tour en cours." },
+						{ "text": "Il cible ensuite une Persona adverse et lui inflige des dégâts équivalents à 5 fois la somme obtenue." },
+						{ "label": "À 50 PV ou moins", "text": "Lance 3d6 à la place." }
 					]
 				},
 				{
@@ -339,18 +329,14 @@
 					"blocks": [
 						{ "text": "Andrei libère toute sa créativité pour écrire des horreurs psychiquement insoutenables.", "italic": true },
 						{ "text": "Toutes les cartes sur le terrain, sauf Andrei, subissent 30 dégâts." },
-						{ "text": "Après application des dégâts, toute carte, incluant Andrei, possédant 50 PV ou moins est instantanément éliminée." }
+						{ "text": "Après application des dégâts, toute carte, incluant Andrei, possédant 50 PV ou moins est instantanément éliminée." },
+						{ "text": "Le temps s’arrête ensuite pour tout le monde sauf Andrei. Toutes les autres cartes, incluant son allié, subissent STUN pendant 1 tour." }
 					]
 				}
 			]
 		},
 		{
 			"id": "paul",
-			"asset": "Paul",
-			"name": "Paul",
-			"subclass": "tank",
-			"health": 180,
-			"tweak": 2,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -362,14 +348,12 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Sang de Marseille",
-					"cost": "3 Tweak",
 					"blocks": [{ "text": "Inflige 15 dégâts aux deux Personas adverses. Il pioche ensuite une Réaction dans le deck adverse et la met dans la défausse sans l’utiliser." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Photographe",
-					"cost": "2 Tweak",
 					"blocks": [{ "text": "Paul attire l’attention sur lui. Il s’applique Tunnel. Pendant le prochain tour adverse, l’ennemi doit cibler Paul avec ses attaques. Chaque utilisation augmente le coût de cette capacité de 1 Tweak." }]
 				},
 				{
@@ -382,11 +366,6 @@
 		},
 		{
 			"id": "samuel",
-			"asset": "Samuel",
-			"name": "Samuel",
-			"subclass": "assassin",
-			"health": 100,
-			"tweak": 4,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -398,14 +377,12 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Suceur des maths",
-					"cost": "3 Tweak",
 					"blocks": [{ "text": "Samuel inflige 10 dégâts à une Persona de son choix." }, { "text": "Chaque utilisation augmente les dégâts de cette capacité de 5 points supplémentaires." }, { "label": "Progression", "text": "10, 15, 20, 25, 30..." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Santé !",
-					"cost": "2 Tweak",
 					"blocks": [
 						{ "text": "Samuel chug sa bière et la lance, infligeant 20 dégâts à une Persona adverse de son choix." },
 						{ "text": "Il peut ensuite choisir de lancer une pièce une fois :" },
@@ -428,11 +405,6 @@
 		},
 		{
 			"id": "oscar",
-			"asset": "Oscar",
-			"name": "Oscar",
-			"subclass": "support",
-			"health": 130,
-			"tweak": 1,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -444,7 +416,6 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Petit Prince",
-					"cost": "1 Tweak",
 					"blocks": [
 						{ "text": "Oscar choisit l’un des deux effets :" },
 						{ "items": ["Option 1 : Inflige 10 dégâts à toutes les cartes sur le terrain, y compris lui-même et son allié.", "Option 2 : Récupère 10 PV et soigne également une Persona adverse de son choix de 10 PV."] }
@@ -453,8 +424,7 @@
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
-					"name": "Lapin",
-					"cost": "10 Tweak",
+					"name": "Saut de Lapin",
 					"blocks": [{ "text": "Oscar effectue un saut de lapin sur une Persona de son choix, lui infligeant 50 dégâts." }]
 				},
 				{
@@ -467,11 +437,6 @@
 		},
 		{
 			"id": "jad",
-			"asset": "Jad",
-			"name": "Jad",
-			"subclass": "dps",
-			"health": 160,
-			"tweak": 3,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -495,7 +460,6 @@
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Vape Master",
-					"cost": "5 Tweak",
 					"blocks": [{ "text": "Jad vape tellement qu’il finit par se faire complètement oublier. Il devient impossible à cibler pendant 1 tour." }]
 				},
 				{
@@ -513,11 +477,6 @@
 		},
 		{
 			"id": "marion",
-			"asset": "Marion",
-			"name": "Marion",
-			"subclass": "dps",
-			"health": 170,
-			"tweak": 0,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -529,7 +488,6 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Râle",
-					"cost": "2 Tweak",
 					"blocks": [
 						{ "text": "Marion inflige 5 dégâts à une cible." },
 						{ "text": "Les dégâts augmentent de 5 points pour chaque carte Réaction actuellement présente sur le terrain, alliée ou adverse." },
@@ -540,7 +498,6 @@
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Comas éthylique",
-					"cost": "15 Tweak",
 					"blocks": [{ "text": "Marion choisit une Persona adverse et supprime une de ses capacités ou son passif. En contrepartie, Marion subit STUN pendant 1 tour." }]
 				},
 				{
@@ -557,11 +514,6 @@
 		},
 		{
 			"id": "xi",
-			"asset": "Xi",
-			"name": "Xi",
-			"subclass": "dps",
-			"health": 140,
-			"tweak": 1,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -573,14 +525,12 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Jing",
-					"cost": "1 Tweak",
 					"blocks": [{ "text": "Xi inflige 10 dégâts." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Ping",
-					"cost": "2 Tweak",
 					"blocks": [{ "text": "Xi lance 4d6 et inflige une rafale de dégâts équivalente à la somme des quatre dés." }, { "text": "Elle récupère ensuite autant de PV que de dégâts infligés." }, { "label": "Dégâts et soins", "text": "4 à 24 PV." }]
 				},
 				{
@@ -598,11 +548,6 @@
 		},
 		{
 			"id": "yan",
-			"asset": "Yan",
-			"name": "Yan",
-			"subclass": "assassin",
-			"health": 110,
-			"tweak": 3,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -614,14 +559,12 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Far-right Punch",
-					"cost": "2 Tweak",
 					"blocks": [{ "text": "Yan inflige des dégâts équivalents à 50 % de ses PV manquants." }, { "label": "Exemple", "text": "À 50 PV sur 110, il lui manque 60 PV. Il inflige donc 30 dégâts." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Raving",
-					"cost": "4 Tweak",
 					"blocks": [{ "items": ["Yan inflige 20 dégâts à chacune des deux Personas adverses.", "OU : Yan inflige 30 dégâts à une Persona de son choix."] }, { "text": "Il s’applique ensuite l’effet Tunnel." }]
 				},
 				{
@@ -634,11 +577,6 @@
 		},
 		{
 			"id": "alain",
-			"asset": "Alain",
-			"name": "Alain",
-			"subclass": "support",
-			"health": 120,
-			"tweak": 2,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -650,14 +588,12 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Sécurité",
-					"cost": "7 Tweak",
 					"blocks": [{ "text": "Alain Tapp transfère 25 PV à son allié et lui applique l’effet Tunnel." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Cryptographie",
-					"cost": "5 Tweak",
 					"blocks": [{ "text": "Alain Tapp intercepte la prochaine attaque qui ne le vise pas. Il subit alors les dégâts à la place de la cible initiale." }]
 				},
 				{
@@ -674,11 +610,6 @@
 		},
 		{
 			"id": "jesus",
-			"asset": "Jesus",
-			"name": "Jesus",
-			"subclass": "dps",
-			"health": 150,
-			"tweak": 3,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -694,7 +625,6 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Gambling's Power",
-					"cost": "3 Tweak",
 					"blocks": [
 						{ "text": "Jesus lance 1d6 pour déterminer sa cible :" },
 						{ "items": ["1-2 : Inflige 35 dégâts à son allié, s’il est encore en vie.", "3-4 : Inflige 35 dégâts à la Persona adverse de gauche.", "5-6 : Inflige 35 dégâts à la Persona adverse de droite."] }
@@ -704,13 +634,12 @@
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Jexa's Will",
-					"cost": "8 Tweak",
 					"blocks": [{ "text": "Jesus s’inflige 20 dégâts et détruit 1 Objet adverse." }]
 				},
 				{
 					"kind": "ultimate",
 					"label": "Ultime",
-					"name": "Tarzan's Soul",
+					"name": "Tarzan's Potential",
 					"blocks": [
 						{ "text": "Pendant les 5 prochains tours, Jesus a 50 % de chances d’être immunisé à tous les dégâts à chaque tour." },
 						{ "text": "De plus, lorsqu’il obtient un 6 au lancer de 1d6 de Gambling's Power, il choisit sa cible et lui inflige 70 dégâts à la place." }
@@ -720,12 +649,6 @@
 		},
 		{
 			"id": "gabriel",
-			"asset": "Gabriel",
-			"name": "Gabriel",
-			"subclass": "tank",
-			"health": 190,
-			"tweak": 1,
-			"becomesInert": false,
 			"abilities": [
 				{
 					"kind": "passive",
@@ -737,21 +660,18 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "2D Art",
-					"cost": "5 Yeux",
-					"blocks": [{ "text": "Gabriel tranche avec son stylo et inflige 20 dégâts à la carte située à sa gauche." }, { "text": "Il inflige à la carte située à sa droite des dégâts égaux à 5 fois le nombre d’Yeux qu’il possède actuellement." }]
+					"blocks": [{ "text": "Gabriel tranche avec son stylo et inflige 20 dégâts à la carte située à sa gauche." }, { "text": "Il inflige à la carte située à sa droite des dégâts égaux à 3 fois le nombre d’Yeux qu’il possède actuellement." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "3D Eye",
-					"cost": "5 Tweak",
 					"blocks": [{ "text": "Gabriel pioche une Réaction, puis la place dans la défausse sans l’utiliser." }, { "text": "Il gagne un nombre d’Yeux égal à la rareté de la carte : 1 pour Commune, 2 pour Rare, 3 pour Épique et 5 pour Légendaire." }]
 				},
 				{
 					"kind": "ultimate",
 					"label": "Ultime",
 					"name": "4D Artist",
-					"cost": "20 Yeux",
 					"blocks": [
 						{ "text": "Gabriel redessine les règles.", "italic": true },
 						{ "text": "Gabriel peut remplacer la capacité ou l’ultime de n’importe quelle carte par la capacité ou l’ultime de toute autre carte présente sur le terrain, à l’exception de lui-même." },
@@ -762,47 +682,67 @@
 		},
 		{
 			"id": "jake",
-			"asset": "Jake",
-			"name": "Jake",
-			"subclass": "tank",
-			"health": 0,
-			"tweak": 0,
-			"abilities": [],
-			"placeholder": true
-		},
-		{
-			"id": "victor",
-			"asset": "Victor",
-			"name": "Victor",
-			"subclass": "assassin",
-			"health": "?",
-			"tweak": "?",
 			"abilities": [
 				{
 					"kind": "passive",
 					"label": "Passif",
-					"name": "Bientôt ...",
-					"blocks": [{ "text": "Bientôt ..." }]
+					"name": "Grown in the UK",
+					"blocks": [{ "text": "Lorsque Jake atteint 100 PV ou moins, il ne subit plus que 50 % des dégâts reçus." }]
 				},
 				{
 					"kind": "ability1",
 					"label": "Capacité 1",
-					"name": "Bientôt ...",
-					"blocks": [{ "text": "Bientôt ..." }]
+					"name": "Stab",
+					"blocks": [{ "text": "Jake poignarde 6 fois de suite. Lancez 6d6 : la somme de tous les dés correspond aux dégâts infligés à la cible de son choix." }]
 				},
 				{
 					"kind": "ability2",
 					"label": "Capacité 2",
-					"name": "Bientôt ...",
-					"blocks": [{ "text": "Bientôt ..." }]
+					"name": "Titan",
+					"blocks": [{ "text": "Jake s’applique Tunnel. Jusqu’à la fin du tour, il renvoie à leur source 100 % des dégâts qui lui sont infligés." }]
 				},
 				{
 					"kind": "ultimate",
 					"label": "Ultime",
-					"name": "Bientôt ...",
-					"blocks": [{ "text": "Bientôt ..." }]
+					"name": "Copypasta",
+					"blocks": [{ "text": "Jake écrit des horreurs sur une Persona de son choix. Lancez 10d6 + 30 : le total correspond aux dégâts qu’il lui inflige." }]
 				}
 			]
+		},
+		{
+			"id": "victor",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passif",
+					"name": "C’est chaud frérot",
+					"blocks": [{ "text": "Les attaques de Victor appliquent des Brûlures. Chaque Brûlure inflige 2 dégâts par tour pendant 2 tours." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Capacité 1",
+					"name": "Feu",
+					"blocks": [{ "text": "Victor inflige 15 dégâts à la carte de son choix et lui applique 3 Brûlures." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Capacité 2",
+					"name": "Top 3 des moments de ma vie",
+					"blocks": [{ "text": "Victor embrase toutes les cartes adverses. Il inflige 3d6 dégâts et applique 2 Brûlures à chacune d’elles." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultime",
+					"name": "Incendie",
+					"blocks": [
+						{ "text": "Victor incinère le plateau et brûle tous ses Objets.", "italic": true },
+						{ "text": "Chaque Persona adverse et l’allié de Victor subissent chacun 30 dégâts de feu, plus 5 dégâts pour chaque Brûlure active sur cette carte." },
+						{ "text": "Toutes les Brûlures sont ensuite retirées de chaque carte." },
+						{ "text": "Si au moins une carte meurt dans l’incendie, Victor ne devient pas Inerte." }
+					]
+				}
+			],
+			"ultimateAftermath": "VICTOR DEVIENT INERTE SAUF SI AU MOINS UNE CARTE MEURT DANS L’INCENDIE"
 		}
 	]
 }
