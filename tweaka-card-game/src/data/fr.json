@@ -663,7 +663,7 @@
 						{ "text": "Marion inflige 10 dégâts à une cible." },
 						{ "text": "Chaque fois qu’une carte meurt sur le terrain, les dégâts de Râle sont définitivement doublés : 10, 20, 40, 80, et ainsi de suite." },
 						{ "text": "Râle coûte toujours 2 Tweak." },
-						{ "text": "Marion génère initialement 1 Tweak par tour. Chaque fois qu’une carte meurt sur le terrain, sa génération de Tweak augmente définitivement de 1." }
+						{ "text": "Marion génère initialement 0 Tweak par tour. Chaque fois qu’une carte meurt sur le terrain, sa génération de Tweak augmente définitivement de 1." }
 					]
 				},
 				{

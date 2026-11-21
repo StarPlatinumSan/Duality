@@ -83,7 +83,7 @@ export const personaDefinitions: PersonaDefinition[] = [
 		subclass: "dps",
 		classOrder: 2,
 		health: 270,
-		tweak: 1,
+		tweak: 0,
 		costs: { ability1: tweak(2), ability2: tweak(15) },
 	},
 	{

@@ -657,7 +657,7 @@
 						{ "text": "Marion deals 10 damage to a target." },
 						{ "text": "Whenever any card dies on the field, Rant’s damage is permanently doubled: 10, 20, 40, 80, and so on." },
 						{ "text": "Rant always costs 2 Tweak." },
-						{ "text": "Marion initially generates 1 Tweak per turn. Whenever a card dies on the field, her Tweak generation permanently increases by 1." }
+						{ "text": "Marion initially generates 0 Tweak per turn. Whenever a card dies on the field, her Tweak generation permanently increases by 1." }
 					]
 				},
 				{
