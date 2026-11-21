@@ -992,7 +992,7 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Double Katana",
-					"blocks": [{ "text": "Seb chooses one of two attack patterns:" }, { "items": ["Concentrated strike: deal 20 damage twice to one target.", "Split strike: deal 20 damage to each opposing Persona."] }]
+					"blocks": [{ "text": "Seb chooses one of two attack patterns:" }, { "items": ["Concentrated strike: deal 2x20 damage to one target.", "Split strike: deal 20 damage to each opposing Persona."] }]
 				},
 				{
 					"kind": "ability2",

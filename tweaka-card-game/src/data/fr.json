@@ -1006,7 +1006,7 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Double Katana",
-					"blocks": [{ "text": "Seb choisit l’un des deux modes d’attaque :" }, { "items": ["Frappe concentrée : inflige deux fois 20 dégâts à une seule cible.", "Frappe divisée : inflige 20 dégâts à chacune des deux Personas adverses."] }]
+					"blocks": [{ "text": "Seb choisit l’un des deux modes d’attaque :" }, { "items": ["Frappe concentrée : inflige 2x20 dégâts à une seule cible.", "Frappe divisée : inflige 20 dégâts à chacune des deux Personas adverses."] }]
 				},
 				{
 					"kind": "ability2",
