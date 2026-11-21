@@ -48,7 +48,7 @@
 				"cards": [
 					{
 						"title": "Persona cards",
-						"paragraphs": ["Persona cards represent the characters you control, such as Andrei, Samuel, Paul, Oscar, and Jad.", "Each Persona has:"],
+						"paragraphs": ["Persona cards represent the characters you control, such as Andrei, Samuel, Paul, Oscar, etc.", "Each Persona has:"],
 						"points": [
 							{ "term": "Health Points (HP)", "text": "measure resistance to damage." },
 							{ "term": "Tweak", "text": "is the resource used to activate abilities." },
@@ -215,14 +215,6 @@
 					},
 					{
 						"personas": [
-							{ "name": "Marion", "role": "DPS" },
-							{ "name": "Alain", "role": "Support" }
-						],
-						"result": "Coming Soon ...",
-						"interaction": "Coming Soon ..."
-					},
-					{
-						"personas": [
 							{ "name": "Andrei", "role": "Tank" },
 							{ "name": "Gabriel", "role": "Tank" }
 						],
@@ -311,8 +303,8 @@
 					},
 					{
 						"personas": [
-							{ "name": "Yan", "role": "Carry" },
-							{ "id": "alain", "name": "Tapp", "role": "Support" }
+							{ "name": "Marion", "role": "Carry" },
+							{ "name": "Samuel", "role": "Support" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
@@ -347,7 +339,7 @@
 					"name": "Tweak Créatif",
 					"blocks": [
 						{ "text": "Andrei rolls 2d6 and gains Tweak equal to the sum for the current turn." },
-						{ "text": "He then targets an opposing Persona and deals damage equal to 3 times the sum rolled." },
+						{ "text": "He then targets an opposing Persona and deals damage equal to 10 times the sum rolled." },
 						{ "label": "At 50 HP or less", "text": "Roll 3d6 instead." }
 					]
 				},
@@ -371,7 +363,7 @@
 					"kind": "passive",
 					"label": "Passive",
 					"name": "Cig Enthusiast",
-					"blocks": [{ "text": "Paul loves cigs. At the start of each of his turns, he restores 10 HP." }]
+					"blocks": [{ "text": "Paul loves cigs. At the start of each of his turns, he restores 15 HP." }]
 				},
 				{
 					"kind": "ability1",
@@ -400,13 +392,13 @@
 					"kind": "passive",
 					"label": "Passive",
 					"name": "QUOIII",
-					"blocks": [{ "text": "When Samuel is eliminated, roll 1d6 at the start of the next turn:" }, { "items": ["1-3: No effect.", "4: Returns to life with 1 HP.", "5: Returns to life with 50 HP.", "6: Returns to life with 100 HP."] }]
+					"blocks": [{ "text": "When Samuel is eliminated, roll 1d6 at the start of the next turn:" }, { "items": ["1-3: No effect.", "4: Returns to life with 1 HP.", "5: Returns to life with 100 HP.", "6: Returns to life with 200 HP."] }]
 				},
 				{
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Math Adept",
-					"blocks": [{ "text": "Samuel deals 10 damage to a Persona of his choice." }, { "text": "Each use increases this ability's damage by an additional 5." }, { "label": "Progression", "text": "10, 15, 20, 25, 30..." }]
+					"blocks": [{ "text": "Samuel deals 5 damage to a Persona of his choice." }, { "text": "Each use increases this ability's damage by an additional 5." }, { "label": "Progression", "text": "5, 10, 15, 20, 25..." }]
 				},
 				{
 					"kind": "ability2",
@@ -445,10 +437,7 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Little Prince",
-					"blocks": [
-						{ "text": "Oscar chooses one of two effects:" },
-						{ "items": ["Option 1: Deal 10 damage to every card on the field, including himself and his ally.", "Option 2: Restore 10 HP and also heal an opposing Persona of his choice for 10 HP."] }
-					]
+					"blocks": [{ "text": "Oscar chooses one of two effects:" }, { "items": ["Option 1: Deal 10 damage to every card on the field, including himself and his ally.", "Option 2: Oscar and his ally each restore 10 HP."] }]
 				},
 				{
 					"kind": "ability2",
@@ -518,9 +507,10 @@
 					"label": "Ability 1",
 					"name": "Rant",
 					"blocks": [
-						{ "text": "Marion deals 5 damage to a target." },
-						{ "text": "Damage increases by 5 for each Reaction card currently on the field, allied or opposing." },
-						{ "label": "If her ally dies", "items": ["Cost reduced to 0 Tweak.", "Each use now costs 10 HP.", "The ability's final damage is doubled."] }
+						{ "text": "Marion deals 10 damage to a target." },
+						{ "text": "Whenever any card dies on the field, Rant’s damage is permanently doubled: 10, 20, 40, 80, and so on." },
+						{ "text": "Rant always costs 2 Tweak." },
+						{ "text": "Marion initially generates 1 Tweak per turn. Whenever a card dies on the field, her Tweak generation permanently increases by 1." }
 					]
 				},
 				{
@@ -547,7 +537,7 @@
 				{
 					"kind": "passive",
 					"label": "Passive",
-					"name": "Yellow",
+					"name": "Eleven",
 					"blocks": [{ "text": "Whenever Xi takes damage, she gains 1 Tweak." }, { "text": "If the damage comes from Andrei, she gains 2 Tweak instead." }]
 				},
 				{
@@ -565,12 +555,12 @@
 				{
 					"kind": "ultimate",
 					"label": "Ultimate",
-					"name": "HONG KONG",
+					"name": "SOCIAL CREDIT",
 					"blocks": [
 						{ "text": "Xi has a credit bank starting at 10 credits." },
 						{ "text": "At the start of each of her turns, she accumulates 10 additional credits." },
 						{ "text": "When she activates her Ultimate, Xi spends all her credits and may distribute them freely between:", "items": ["Damage: 1 credit for 1 damage.", "Healing: 1 credit for 1 HP restored."] },
-						{ "label": "Special interaction", "text": "If Xi is eliminated by Jad's Grape Ultimate, she may still activate HONG KONG as a Reaction and spend her accumulated credits." }
+						{ "label": "Special interaction", "text": "If Xi is eliminated by Jad's Grape Ultimate, she may still activate SOCIAL CREDIT as a Reaction and spend her accumulated credits." }
 					]
 				}
 			]
@@ -605,35 +595,6 @@
 			]
 		},
 		{
-			"id": "alain",
-			"abilities": [
-				{
-					"kind": "passive",
-					"label": "Passive",
-					"name": "Tapp",
-					"blocks": [{ "text": "On every turn during which Alain is not targeted, Tapp deals 10 damage to each opposing card." }]
-				},
-				{
-					"kind": "ability1",
-					"label": "Ability 1",
-					"name": "Security",
-					"blocks": [{ "text": "Alain Tapp transfers 25 HP to his ally and applies Tunnel to them." }]
-				},
-				{
-					"kind": "ability2",
-					"label": "Ability 2",
-					"name": "Cryptography",
-					"blocks": [{ "text": "Alain Tapp intercepts the next attack that would not target him. He takes the damage in place of the original target." }]
-				},
-				{
-					"kind": "ultimate",
-					"label": "Ultimate",
-					"name": "Security Breach",
-					"blocks": [{ "text": "A breach hacks the system.", "italic": true }, { "text": "Every Reaction card on the field is removed." }, { "text": "Every opposing Object is replaced with another random Object." }]
-				}
-			]
-		},
-		{
 			"id": "jesus",
 			"abilities": [
 				{
@@ -641,7 +602,7 @@
 					"label": "Passive",
 					"name": "Bet",
 					"blocks": [
-						{ "text": "When Jesus is below half HP, he may sacrifice up to 15 HP to increase the damage of Gambling's Power at a 1:1 ratio: each HP sacrificed adds 1 damage, for a maximum of +15 damage. The amount must be chosen before rolling." }
+						{ "text": "When Jesus is below half HP, he may sacrifice up to 30 HP to increase the damage of Gambling's Power at a 1:1 ratio: each HP sacrificed adds 1 damage, for a maximum of +30 damage. The amount must be chosen before rolling." }
 					]
 				},
 				{
@@ -694,7 +655,8 @@
 					"name": "4D Artist",
 					"blocks": [
 						{ "text": "Gabriel redraws the rules.", "italic": true },
-						{ "text": "Gabriel may replace any card's ability or Ultimate with an ability or Ultimate from any other card on the field, excluding himself." },
+						{ "text": "Gabriel may replace any card's Passive, ability, or Ultimate with a Passive, ability, or Ultimate from any other card on the field, excluding himself." },
+						{ "text": "After using 4D Artist, the directions of 2D Art are reversed: it deals 20 damage to the card on Gabriel’s right and damage equal to 5 times his Eyes to the card on his left." },
 						{ "text": "Gabriel does not become Inert after using this ability." }
 					]
 				}
@@ -725,7 +687,7 @@
 					"kind": "ultimate",
 					"label": "Ultimate",
 					"name": "Copypasta",
-					"blocks": [{ "text": "Jake writes horrors about a Persona of his choice. Roll 10d6 + 30; the total is the damage he deals to that Persona." }]
+					"blocks": [{ "text": "Jake writes horrors about a Persona of his choice. He chooses one of two damage options: deal a flat 75 damage, or roll 15d6 + 30 and deal the resulting total." }]
 				}
 			]
 		},
@@ -736,7 +698,7 @@
 					"kind": "passive",
 					"label": "Passive",
 					"name": "C’est chaud frérot",
-					"blocks": [{ "text": "Victor’s attacks apply Burns. Each Burn deals 2 damage per turn for 2 turns." }]
+					"blocks": [{ "text": "Victor’s attacks apply Burns. Each Burn deals 5 damage per turn for 2 turns." }]
 				},
 				{
 					"kind": "ability1",
@@ -756,13 +718,157 @@
 					"name": "Incendie",
 					"blocks": [
 						{ "text": "Victor incinerates the field and burns all of his Objects.", "italic": true },
-						{ "text": "Each opposing Persona and Victor’s ally take 30 fire damage, plus 5 damage for each active Burn on that card." },
+						{ "text": "Each opposing Persona and Victor’s ally take 30 fire damage, plus 10 damage for each active Burn on that card." },
 						{ "text": "All Burns are then removed from every card." },
 						{ "text": "If at least one card dies in the fire, Victor does not become Inert." }
 					]
 				}
 			],
 			"ultimateAftermath": "VICTOR BECOMES INERT UNLESS AT LEAST ONE CARD DIES IN THE FIRE"
+		},
+		{
+			"id": "kenny",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Shot for Shot",
+					"blocks": [{ "text": "At the start of each turn, Kenny has a 33% chance to reflect 100% of the damage he takes from abilities during that turn. The opposing team doesn't know when this effect is active." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Shotgun?",
+					"blocks": [{ "text": "Kenny fires a shotgun at his target, dealing 40 damage and taking 10 damage himself." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Persuasive Lure",
+					"blocks": [{ "text": "Kenny chooses the first ability of any Persona in the match and uses it on a Persona of his choice." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "KENNY CURSE",
+					"blocks": [
+						{ "text": "Kenny curses the opposing team. During that turn, each opposing Persona takes 50 damage plus additional damage equal to 20% of Kenny’s missing HP." },
+						{ "text": "He may also use any active effect from the opponents’ Objects." }
+					]
+				}
+			]
+		},
+		{
+			"id": "tom",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "City Boy",
+					"blocks": [{ "text": "Tom is not afraid of danger. The first time he reaches 50% HP or less, the cost of all his abilities is permanently reduced by 1 Tweak for the rest of the match." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Adrenaline",
+					"blocks": [{ "text": "Tom slashes both opposing Personas with his katana, dealing 35 damage to each of them." }, { "text": "Each target is checked independently and has a 25% chance to receive a critical hit for double damage instead." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Laval Mafia",
+					"blocks": [{ "text": "Tom increases the Tweak cost of one opposing ability by 1." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "ABSOLUTE CINEMA",
+					"blocks": [
+						{ "text": "Tom dashes through both opposing Personas with his katana, dealing 40 damage to each of them. The entire dash makes one 25% critical-hit check; on a critical hit, both targets take 80 damage instead." },
+						{ "text": "Tom increases the Tweak cost of every ability belonging to both opposing Personas by 2." },
+						{ "text": "He also reduces the Tweak cost of every ability belonging to his ally by 1. This reduction cannot lower an ability’s cost below 1 Tweak." }
+					]
+				}
+			]
+		},
+		{
+			"id": "charbel",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Mentor",
+					"blocks": [{ "text": "After the first attack that hits Charbel during a turn, he becomes immune to every subsequent attack for the remainder of that turn." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Charismatic",
+					"blocks": [{ "text": "Charbel inspires himself and his ally. Both gain a 20% damage boost for the remainder of the turn." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Sacrifice",
+					"blocks": [{ "text": "Roll 2d6. Charbel chooses one die and deals damage equal to 10 times its result to a target of his choice. He then takes damage equal to 10 times the other die’s result." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Storm of Chaos",
+					"blocks": [
+						{ "text": "Charbel unleashes Chaos against all odds.", "italic": true },
+						{ "text": "Every card on the field loses all of its Objects and Reactions." },
+						{ "text": "Each opposing Persona rolls 2d6 and takes damage equal to 20 times its highest result." },
+						{ "text": "Charbel and his ally each roll 2d6 and take damage equal to 20 times their lowest result." }
+					]
+				}
+			]
+		},
+		{
+			"id": "etiglad",
+			"abilities": []
+		},
+		{
+			"id": "seb",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Rising Crit",
+					"blocks": [
+						{ "text": "Seb begins the match with a 5% chance for his abilities to critically hit." },
+						{ "text": "His critical-hit chance permanently increases by 1 percentage point at the start of each turn and by 1 percentage point every time he is hit." }
+					]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Double Katana",
+					"blocks": [{ "text": "Seb chooses one of two attack patterns:" }, { "items": ["Concentrated strike: deal 20 damage twice to one target.", "Split strike: deal 20 damage to each opposing Persona."] }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Samurai Slash",
+					"blocks": [{ "text": "Seb performs an X-shaped slash on an opposing Persona of his choice, dealing 40 damage and marking them." }, { "text": "Until the end of Seb’s next turn, he deals 50% more damage to the marked target." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Last Stand: Yasuke",
+					"blocks": [
+						{ "text": "When Seb takes damage that would eliminate him, he enters Last Stand and immediately ends the opponent’s current turn." },
+						{ "text": "His current critical-hit chance and all damage he deals are doubled. His critical-hit chance cannot exceed 100%." },
+						{ "text": "Seb performs Double Katana and X-Slash one final time before dying." }
+					]
+				}
+			],
+			"ultimateAftermath": "SEB DIES AFTER HIS LAST STAND"
+		},
+		{
+			"id": "antoine",
+			"abilities": []
 		}
 	]
 }
