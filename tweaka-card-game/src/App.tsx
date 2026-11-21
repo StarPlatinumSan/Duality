@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import "./App.css";
-import { contentByLanguage, type BestiarySection, type GameContent, type Language, type Persona, type RuleCard, type View } from "./data/content";
+import { contentByLanguage, type BestiarySection, type GameContent, type Language, type Persona, type RuleCard, type SynergyTone, type View } from "./data/content";
 
 function formatName(template: string, name: string) {
 	return template.replace("{name}", name);
@@ -384,8 +384,22 @@ function PersonaTile({ persona, onSelect, content }: { persona: Persona; onSelec
 function Bestiary({ onMenu, content, language, onLanguageChange }: { onMenu: () => void; content: GameContent; language: Language; onLanguageChange: (language: Language) => void }) {
 	const [section, setSection] = useState<BestiarySection>("personas");
 	const [personaView, setPersonaView] = useState<"grouped" | "all">("grouped");
+	const [synergyToneFilter, setSynergyToneFilter] = useState<SynergyTone | "all">("all");
+	const [synergyPersonaFilter, setSynergyPersonaFilter] = useState("all");
 	const [selectedPersonaId, setSelectedPersonaId] = useState<string | null>(null);
 	const selectedPersona = selectedPersonaId ? (content.personas.find((persona) => persona.id === selectedPersonaId) ?? null) : null;
+	const synergyPersonaNames = Array.from(
+		new Set(content.bestiary.synergies.flatMap((category) => category.synergies.flatMap((synergy) => synergy.personas.map((persona) => persona.name)))),
+	).sort((firstName, secondName) => firstName.localeCompare(secondName, language));
+	const visibleSynergyCategories = content.bestiary.synergies
+		.filter((category) => synergyToneFilter === "all" || category.tone === synergyToneFilter)
+		.map((category) => ({
+			...category,
+			synergies: category.synergies.filter(
+				(synergy) => synergyPersonaFilter === "all" || synergy.personas.some((persona) => persona.name === synergyPersonaFilter),
+			),
+		}))
+		.filter((category) => category.synergies.length > 0);
 
 	useEffect(() => {
 		if (!selectedPersonaId) return;
@@ -516,56 +530,101 @@ function Bestiary({ onMenu, content, language, onLanguageChange }: { onMenu: () 
 					)}
 
 					{section === "synergies" && (
-						<div className="synergy-board">
-							{content.bestiary.synergies.map((category) => (
-								<section className={`synergy-category is-${category.tone}`} key={category.tone}>
-									<header className="synergy-category-heading">
-										<div>
-											<span>{category.label}</span>
-											<h3>{category.title}</h3>
-										</div>
-										<p>{category.description}</p>
-									</header>
+						<div className="synergy-browser">
+							<div className="synergy-controls">
+								<div className="synergy-tone-filter" role="group" aria-label={content.bestiary.synergyFilters.ariaLabel}>
+									{([
+										{ value: "all", label: content.bestiary.synergyFilters.allTypes },
+										{ value: "synergistic", label: content.bestiary.synergyFilters.synergistic },
+										{ value: "antagonistic", label: content.bestiary.synergyFilters.antagonistic },
+									] as const).map((filter) => (
+										<button
+											key={filter.value}
+											type="button"
+											data-tone={filter.value}
+											className={synergyToneFilter === filter.value ? "active" : ""}
+											aria-pressed={synergyToneFilter === filter.value}
+											onClick={() => setSynergyToneFilter(filter.value)}
+										>
+											{filter.label}
+										</button>
+									))}
+								</div>
 
-									<div className="synergy-grid">
-										{category.synergies.map((synergy) => (
-											<article className="synergy-card" key={synergy.personas.map((persona) => persona.name).join("-")} tabIndex={0}>
-												<div className="synergy-pair">
-													{synergy.personas.map((persona, index) => {
-									const personaRecord = content.personas.find((candidate) => (persona.id ? candidate.id === persona.id : candidate.name === persona.name));
+								<label className="synergy-persona-filter">
+									<span>{content.bestiary.synergyFilters.personaLabel}</span>
+									<span className="synergy-select-wrap">
+										<select value={synergyPersonaFilter} onChange={(event) => setSynergyPersonaFilter(event.target.value)}>
+											<option value="all">{content.bestiary.synergyFilters.allPersonas}</option>
+											{synergyPersonaNames.map((personaName) => (
+												<option value={personaName} key={personaName}>
+													{personaName}
+												</option>
+											))}
+										</select>
+									</span>
+								</label>
+							</div>
 
-														return (
-															<div className="synergy-persona" data-persona={personaRecord?.id} key={persona.name}>
-																<PersonaArtwork name={personaRecord?.asset ?? persona.name} className="synergy-persona-image" />
-																<i className="synergy-persona-fallback" aria-hidden="true"></i>
-																<div className="synergy-persona-copy">
-																	<span>{persona.role}</span>
-																	<strong>{persona.name}</strong>
-																</div>
-																{index === 0 && <b aria-hidden="true">&amp;</b>}
-															</div>
-														);
-													})}
+							{visibleSynergyCategories.length > 0 ? (
+								<div className="synergy-board">
+									{visibleSynergyCategories.map((category) => (
+										<section className={`synergy-category is-${category.tone}`} key={category.tone}>
+											<header className="synergy-category-heading">
+												<div>
+													<span>{category.label}</span>
+													<h3>{category.title}</h3>
 												</div>
+												<p>{category.description}</p>
+											</header>
 
-												<div className="synergy-panel">
-													<div className="synergy-result">
-														<span>{category.tone === "synergistic" ? content.ui.fusion : content.ui.carryBuff}</span>
-														<p>{synergy.result}</p>
-													</div>
+											<div className="synergy-grid">
+												{category.synergies.map((synergy) => (
+													<article className="synergy-card" key={synergy.personas.map((persona) => persona.name).join("-")} tabIndex={0}>
+														<div className="synergy-pair">
+															{synergy.personas.map((persona, index) => {
+																const personaRecord = content.personas.find((candidate) =>
+																	persona.id ? candidate.id === persona.id : candidate.name === persona.name,
+																);
 
-													{category.tone === "antagonistic" && (
-														<div className="synergy-nerf">
-															<span>{content.ui.supportNerf}</span>
-															<p>{synergy.interaction}</p>
+																return (
+																	<div className="synergy-persona" data-persona={personaRecord?.id} key={persona.name}>
+																		<PersonaArtwork name={personaRecord?.asset ?? persona.name} className="synergy-persona-image" />
+																		<i className="synergy-persona-fallback" aria-hidden="true"></i>
+																		<div className="synergy-persona-copy">
+																			<span>{persona.role}</span>
+																			<strong>{persona.name}</strong>
+																		</div>
+																		{index === 0 && <b aria-hidden="true">&amp;</b>}
+																	</div>
+																);
+															})}
 														</div>
-													)}
-												</div>
-											</article>
-										))}
-									</div>
-								</section>
-							))}
+
+														<div className="synergy-panel">
+															<div className="synergy-result">
+																<span>{category.tone === "synergistic" ? content.ui.fusion : content.ui.carryBuff}</span>
+																<p>{synergy.result}</p>
+															</div>
+
+															{category.tone === "antagonistic" && (
+																<div className="synergy-nerf">
+																	<span>{content.ui.supportNerf}</span>
+																	<p>{synergy.interaction}</p>
+																</div>
+															)}
+														</div>
+													</article>
+												))}
+											</div>
+										</section>
+									))}
+								</div>
+							) : (
+								<p className="synergy-empty-state" role="status">
+									{content.bestiary.synergyFilters.noResults}
+								</p>
+							)}
 						</div>
 					)}
 				</section>

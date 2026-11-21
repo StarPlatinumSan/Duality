@@ -156,6 +156,15 @@
 			"grouped": "By class",
 			"all": "All Personas"
 		},
+		"synergyFilters": {
+			"ariaLabel": "Synergy filters",
+			"allTypes": "All duos",
+			"synergistic": "Synergistic",
+			"antagonistic": "Antagonistic",
+			"personaLabel": "Filter by Persona",
+			"allPersonas": "All Personas",
+			"noResults": "No duos match these filters."
+		},
 		"personaGroups": [
 			{ "id": "tank", "label": "Tank" },
 			{ "id": "dps", "label": "DPS" },

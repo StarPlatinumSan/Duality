@@ -142,6 +142,15 @@ export type GameContent = {
 		title: string;
 		tabs: { id: BestiarySection; label: string }[];
 		personaView: { ariaLabel: string; grouped: string; all: string };
+		synergyFilters: {
+			ariaLabel: string;
+			allTypes: string;
+			synergistic: string;
+			antagonistic: string;
+			personaLabel: string;
+			allPersonas: string;
+			noResults: string;
+		};
 		personaGroups: { id: PersonaSubclass; label: string; personaIds: string[] }[];
 		object: { type: string; badge: string; name: string; description: string };
 		reaction: { type: string; badge: string; name: string; description: string };
