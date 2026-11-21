@@ -236,6 +236,62 @@
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Kenny", "role": "Assassin" },
+							{ "name": "Tom", "role": "DPS" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Charbel", "role": "Tank" },
+							{ "name": "Etiglad", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Charbel", "role": "Tank" },
+							{ "name": "Antoine", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Seb", "role": "Assassin" },
+							{ "name": "Victor", "role": "DPS" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Andrei", "role": "Tank" },
+							{ "name": "Charbel", "role": "Tank" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Marion", "role": "DPS" },
+							{ "name": "Jad", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Paul", "role": "Tank" },
+							{ "name": "Jad", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
 					}
 				]
 			},
@@ -305,6 +361,54 @@
 						"personas": [
 							{ "name": "Marion", "role": "Carry" },
 							{ "name": "Samuel", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Tom", "role": "Carry" },
+							{ "name": "Yan", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Seb", "role": "Carry" },
+							{ "name": "Charbel", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Kenny", "role": "Carry" },
+							{ "name": "Etiglad", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Samuel", "role": "Carry" },
+							{ "name": "Antoine", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Seb", "role": "Carry" },
+							{ "name": "Gabriel", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Victor", "role": "Carry" },
+							{ "name": "Antoine", "role": "Support" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
