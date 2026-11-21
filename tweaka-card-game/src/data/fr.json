@@ -102,10 +102,10 @@
 					{
 						"title": "Cartes Réaction",
 						"paragraphs": [
-							"Les Réactions sont des effets passifs ou situationnels obtenus pendant la partie. Elles peuvent être utilisées immédiatement après leur pioche ou conservées face cachée dans la banque de Réactions pour le tour adverse.",
+							"Les Réactions sont des effets passifs ou situationnels obtenus pendant la partie. Elles peuvent être utilisées immédiatement après leur pioche ou conservées face cachée dans la banque de Réactions jusqu’à ce que leur condition ou leur effet permette de les déclencher pendant le tour de l’un ou l’autre joueur.",
 							"Chaque joueur possède au maximum 2 emplacements de Réaction."
 						],
-						"note": "Pendant le tour adverse, une Réaction peut être activée à tout moment. Une seule Réaction peut être utilisée par tour adverse."
+						"note": "Une Réaction conservée peut être activée lorsque sa condition ou son effet permet de la déclencher, pendant le tour adverse comme pendant votre propre tour. Une seule Réaction peut être utilisée pendant chaque tour adverse."
 					}
 				]
 			},
@@ -158,7 +158,7 @@
 				"title": "Utilisation des Réactions",
 				"uses": [
 					{ "label": "Immédiate", "text": "Lorsqu’une Réaction est piochée, le joueur peut choisir de l’activer immédiatement." },
-					{ "label": "Défensive", "text": "Une Réaction conservée dans la banque peut être activée durant le tour adverse afin d’intervenir pendant le jeu ennemi." }
+					{ "label": "Utilisation déclenchée", "text": "Une Réaction conservée dans la banque peut être activée lorsque sa condition ou son effet permet de la déclencher, pendant le tour adverse comme pendant votre propre tour." }
 				]
 			},
 			"lexicon": {
@@ -171,7 +171,7 @@
 					{ "term": "Persona", "definition": "Personnage jouable disposant de PV, de Tweak et de capacités propres." },
 					{ "term": "Carry", "definition": "Persona principale d’un duo, chargée d’infliger la majorité des dégâts." },
 					{ "term": "Support", "definition": "Persona dont le rôle consiste principalement à renforcer ou assister son partenaire." },
-					{ "term": "Réaction", "definition": "Carte activée immédiatement après sa pioche ou en réponse à une action adverse." },
+					{ "term": "Réaction", "definition": "Carte utilisée immédiatement après sa pioche ou lorsque sa condition ou son effet permet de la déclencher pendant le tour de l’un ou l’autre joueur." },
 					{ "term": "BO3", "definition": "Format au meilleur des trois manches." },
 					{ "term": "Dé à six faces (D6)", "definition": "Dé numéroté de 1 à 6. Une notation comme « 3 dé 6 » signifie qu’il faut lancer trois dés à six faces et additionner leurs résultats, sauf indication contraire." }
 				]

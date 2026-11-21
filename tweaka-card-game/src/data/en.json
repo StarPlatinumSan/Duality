@@ -99,10 +99,10 @@
 					{
 						"title": "Reaction cards",
 						"paragraphs": [
-							"Reactions are passive or situational effects obtained during the game. They may be used immediately after drawing or kept face down in the Reaction bank for an opponent's turn.",
+							"Reactions are passive or situational effects obtained during the game. They may be used immediately after drawing or kept face down in the Reaction bank until their condition or effect prompts their use during either player's turn.",
 							"Each player has a maximum of 2 Reaction slots."
 						],
-						"note": "During an opponent's turn, a Reaction may be activated at any time. Only one Reaction may be used per opposing turn."
+						"note": "A stored Reaction may be activated whenever its condition or effect prompts it, during the opponent's turn or during your own turn. Only one Reaction may be used during each opposing turn."
 					}
 				]
 			},
@@ -155,7 +155,7 @@
 				"title": "Using Reactions",
 				"uses": [
 					{ "label": "Immediate", "text": "When a Reaction is drawn, the player may activate it immediately." },
-					{ "label": "Defensive", "text": "A Reaction kept in the bank may be activated during the opponent's turn, allowing intervention during enemy play." }
+					{ "label": "Prompted use", "text": "A Reaction kept in the bank may be activated whenever its condition or effect prompts its use, during the opponent's turn or during your own turn." }
 				]
 			},
 			"lexicon": {
@@ -168,7 +168,7 @@
 					{ "term": "Persona", "definition": "A playable character with HP, Tweak, and unique abilities." },
 					{ "term": "Carry", "definition": "The main Persona in a duo, responsible for most of its damage." },
 					{ "term": "Support", "definition": "A Persona focused on reinforcing or assisting a partner." },
-					{ "term": "Reaction", "definition": "A card activated immediately after drawing or in response to an opponent's action." },
+					{ "term": "Reaction", "definition": "A card used immediately after drawing or whenever its condition or effect prompts its use during either player's turn." },
 					{ "term": "BO3", "definition": "A best of three match format." },
 					{ "term": "Six-sided die (D6)", "definition": "A die with six faces numbered from 1 to 6. A notation such as 3 D6 means rolling three six-sided dice and adding their results unless stated otherwise." }
 				]
