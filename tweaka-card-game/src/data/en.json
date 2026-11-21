@@ -191,8 +191,8 @@
 					},
 					{
 						"personas": [
-							{ "name": "Yan", "role": "Pressure" },
-							{ "name": "Oscar", "role": "Recovery" }
+							{ "name": "Yan", "role": "Assassin" },
+							{ "name": "Xi", "role": "DPS" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
@@ -201,6 +201,14 @@
 						"personas": [
 							{ "name": "Gabriel", "role": "Tank" },
 							{ "name": "Jake", "role": "Tank" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Paul", "role": "Tank" },
+							{ "name": "Oscar", "role": "Support" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
@@ -216,15 +224,7 @@
 					{
 						"personas": [
 							{ "name": "Andrei", "role": "Tank" },
-							{ "name": "Oscar", "role": "Support" }
-						],
-						"result": "Coming Soon ...",
-						"interaction": "Coming Soon ..."
-					},
-					{
-						"personas": [
-							{ "name": "Yan", "role": "Assassin" },
-							{ "name": "Xi", "role": "DPS" }
+							{ "name": "Gabriel", "role": "Tank" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
@@ -233,6 +233,14 @@
 						"personas": [
 							{ "name": "Samuel", "role": "Assassin" },
 							{ "name": "Jake", "role": "Tank" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Jesus", "role": "DPS" },
+							{ "name": "Victor", "role": "Assassin" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
@@ -281,6 +289,30 @@
 						"personas": [
 							{ "name": "Jesus", "role": "Carry" },
 							{ "name": "Jad", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Victor", "role": "Carry" },
+							{ "name": "Paul", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Andrei", "role": "Carry" },
+							{ "name": "Oscar", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Yan", "role": "Carry" },
+							{ "id": "alain", "name": "Tapp", "role": "Support" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
@@ -579,7 +611,7 @@
 					"kind": "passive",
 					"label": "Passive",
 					"name": "Tapp",
-					"blocks": [{ "text": "On every turn during which Alain is not targeted, Tapp deals 5 damage to each opposing card." }]
+					"blocks": [{ "text": "On every turn during which Alain is not targeted, Tapp deals 10 damage to each opposing card." }]
 				},
 				{
 					"kind": "ability1",
@@ -687,7 +719,7 @@
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Titan",
-					"blocks": [{ "text": "Jake applies Tunnel to himself. Until the end of the turn, he reflects 100% of the damage dealt to him back to its source." }]
+					"blocks": [{ "text": "Jake applies Tunnel to himself. Until the next turn, he reflects 100% of the damage dealt to him equally to its source." }]
 				},
 				{
 					"kind": "ultimate",

@@ -45,8 +45,14 @@ export type RuleCard = {
 	note?: string;
 };
 
+export type SynergyPersona = {
+	id?: string;
+	name: string;
+	role: string;
+};
+
 export type Synergy = {
-	personas: [{ name: string; role: string }, { name: string; role: string }];
+	personas: [SynergyPersona, SynergyPersona];
 	result: string;
 	interaction: string;
 };

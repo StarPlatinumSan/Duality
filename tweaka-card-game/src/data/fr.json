@@ -194,8 +194,8 @@
 					},
 					{
 						"personas": [
-							{ "name": "Yan", "role": "Pression" },
-							{ "name": "Oscar", "role": "Récupération" }
+							{ "name": "Yan", "role": "Assassin" },
+							{ "name": "Xi", "role": "DPS" }
 						],
 						"result": "Bientôt ...",
 						"interaction": "Bientôt ..."
@@ -204,6 +204,14 @@
 						"personas": [
 							{ "name": "Gabriel", "role": "Tank" },
 							{ "name": "Jake", "role": "Tank" }
+						],
+						"result": "Bientôt ...",
+						"interaction": "Bientôt ..."
+					},
+					{
+						"personas": [
+							{ "name": "Paul", "role": "Tank" },
+							{ "name": "Oscar", "role": "Support" }
 						],
 						"result": "Bientôt ...",
 						"interaction": "Bientôt ..."
@@ -219,15 +227,7 @@
 					{
 						"personas": [
 							{ "name": "Andrei", "role": "Tank" },
-							{ "name": "Oscar", "role": "Support" }
-						],
-						"result": "Bientôt ...",
-						"interaction": "Bientôt ..."
-					},
-					{
-						"personas": [
-							{ "name": "Yan", "role": "Assassin" },
-							{ "name": "Xi", "role": "DPS" }
+							{ "name": "Gabriel", "role": "Tank" }
 						],
 						"result": "Bientôt ...",
 						"interaction": "Bientôt ..."
@@ -236,6 +236,14 @@
 						"personas": [
 							{ "name": "Samuel", "role": "Assassin" },
 							{ "name": "Jake", "role": "Tank" }
+						],
+						"result": "Bientôt ...",
+						"interaction": "Bientôt ..."
+					},
+					{
+						"personas": [
+							{ "name": "Jesus", "role": "DPS" },
+							{ "name": "Victor", "role": "Assassin" }
 						],
 						"result": "Bientôt ...",
 						"interaction": "Bientôt ..."
@@ -284,6 +292,30 @@
 						"personas": [
 							{ "name": "Jesus", "role": "Carry" },
 							{ "name": "Jad", "role": "Support" }
+						],
+						"result": "Bientôt ...",
+						"interaction": "Bientôt ..."
+					},
+					{
+						"personas": [
+							{ "name": "Victor", "role": "Carry" },
+							{ "name": "Paul", "role": "Support" }
+						],
+						"result": "Bientôt ...",
+						"interaction": "Bientôt ..."
+					},
+					{
+						"personas": [
+							{ "name": "Andrei", "role": "Carry" },
+							{ "name": "Oscar", "role": "Support" }
+						],
+						"result": "Bientôt ...",
+						"interaction": "Bientôt ..."
+					},
+					{
+						"personas": [
+							{ "name": "Yan", "role": "Carry" },
+							{ "id": "alain", "name": "Tapp", "role": "Support" }
 						],
 						"result": "Bientôt ...",
 						"interaction": "Bientôt ..."
@@ -582,7 +614,7 @@
 					"kind": "passive",
 					"label": "Passif",
 					"name": "Tapp",
-					"blocks": [{ "text": "À chaque tour où Alain n’est pas ciblé, Tapp inflige 5 dégâts à chaque carte adverse." }]
+					"blocks": [{ "text": "À chaque tour où Alain n’est pas ciblé, Tapp inflige 10 dégâts à chaque carte adverse." }]
 				},
 				{
 					"kind": "ability1",
@@ -699,7 +731,7 @@
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Titan",
-					"blocks": [{ "text": "Jake s’applique Tunnel. Jusqu’à la fin du tour, il renvoie à leur source 100 % des dégâts qui lui sont infligés." }]
+					"blocks": [{ "text": "Jake s’applique Tunnel. Jusqu’à son prochain tour, il réciproque à la source 100 % des dégâts qui lui sont infligés." }]
 				},
 				{
 					"kind": "ultimate",

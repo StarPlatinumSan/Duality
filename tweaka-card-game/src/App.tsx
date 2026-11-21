@@ -532,7 +532,7 @@ function Bestiary({ onMenu, content, language, onLanguageChange }: { onMenu: () 
 											<article className="synergy-card" key={synergy.personas.map((persona) => persona.name).join("-")} tabIndex={0}>
 												<div className="synergy-pair">
 													{synergy.personas.map((persona, index) => {
-														const personaRecord = content.personas.find((candidate) => candidate.name === persona.name);
+									const personaRecord = content.personas.find((candidate) => (persona.id ? candidate.id === persona.id : candidate.name === persona.name));
 
 														return (
 															<div className="synergy-persona" data-persona={personaRecord?.id} key={persona.name}>

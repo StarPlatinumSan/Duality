@@ -114,7 +114,7 @@ export const personaDefinitions: PersonaDefinition[] = [
 		classOrder: 1,
 		health: 125,
 		tweak: 2,
-		costs: { ability1: tweak(7), ability2: tweak(5) },
+		costs: { ability1: tweak(5), ability2: tweak(5) },
 	},
 	{
 		id: "jesus",
