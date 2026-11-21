@@ -529,7 +529,7 @@ function Bestiary({ onMenu, content, language, onLanguageChange }: { onMenu: () 
 
 									<div className="synergy-grid">
 										{category.synergies.map((synergy) => (
-											<article className="synergy-card" key={synergy.personas.map((persona) => persona.name).join("-")}>
+											<article className="synergy-card" key={synergy.personas.map((persona) => persona.name).join("-")} tabIndex={0}>
 												<div className="synergy-pair">
 													{synergy.personas.map((persona, index) => {
 														const personaRecord = content.personas.find((candidate) => candidate.name === persona.name);
@@ -537,9 +537,7 @@ function Bestiary({ onMenu, content, language, onLanguageChange }: { onMenu: () 
 														return (
 															<div className="synergy-persona" data-persona={personaRecord?.id} key={persona.name}>
 																<PersonaArtwork name={personaRecord?.asset ?? persona.name} className="synergy-persona-image" />
-																<i className="synergy-persona-fallback" aria-hidden="true">
-																	{persona.name}
-																</i>
+																<i className="synergy-persona-fallback" aria-hidden="true"></i>
 																<div className="synergy-persona-copy">
 																	<span>{persona.role}</span>
 																	<strong>{persona.name}</strong>
@@ -550,18 +548,19 @@ function Bestiary({ onMenu, content, language, onLanguageChange }: { onMenu: () 
 													})}
 												</div>
 
-												<div className="synergy-result">
-													<span>{category.tone === "synergistic" ? content.ui.fusion : content.ui.carryBuff}</span>
-													<p>{synergy.result}</p>
-													{category.tone === "synergistic" && <p>{synergy.interaction}</p>}
-												</div>
-
-												{category.tone === "antagonistic" && (
-													<div className="synergy-nerf">
-														<span>{content.ui.supportNerf}</span>
-														<p>{synergy.interaction}</p>
+												<div className="synergy-panel">
+													<div className="synergy-result">
+														<span>{category.tone === "synergistic" ? content.ui.fusion : content.ui.carryBuff}</span>
+														<p>{synergy.result}</p>
 													</div>
-												)}
+
+													{category.tone === "antagonistic" && (
+														<div className="synergy-nerf">
+															<span>{content.ui.supportNerf}</span>
+															<p>{synergy.interaction}</p>
+														</div>
+													)}
+												</div>
 											</article>
 										))}
 									</div>
