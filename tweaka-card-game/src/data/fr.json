@@ -9,6 +9,10 @@
 		"ruleSectionsAria": "Sections des règles",
 		"bestiarySectionsAria": "Sections du bestiaire",
 		"languageAria": "Changer la langue",
+		"muteMusic": "Couper la musique",
+		"unmuteMusic": "Réactiver la musique",
+		"diceNotation": "{count} dé 6",
+		"diceExplanation": "Nombre de dés à six faces à lancer : {count}.",
 		"collection": "Collection",
 		"close": "Fermer",
 		"personaSheet": "Fiche Persona",
@@ -34,8 +38,27 @@
 	},
 	"menu": {
 		"play": "Jouer",
+		"playSubtitle": "Commencer une partie",
 		"rules": "Règles",
-		"bestiary": "Bestiaire"
+		"rulesSubtitle": "Apprendre les mécaniques",
+		"bestiary": "Bestiaire",
+		"bestiarySubtitle": "Découvrir l’univers",
+		"credits": "Crédits",
+		"creditsSubtitle": "À propos du projet"
+	},
+	"credits": {
+		"eyebrow": "À propos du projet",
+		"title": "Crédits",
+		"paragraphs": [
+			"Ceci est un jeu de cartes venant à la base d’une blague par Andrei Bituleanu, pour me divertir. Je ne compte en aucun cas le vendre, car l’IA générative a été utilisée pour appliquer les filtres et régénérer les vraies photos et images des personnages du jeu.",
+			"Ça serait avec grand plaisir, si n'importe quel auteur souhaite redesign les images générées avec l'IA par leurs propres dessins fait à la main, notamment pour les full-arts, vous aurez droit aux crédits nécessaires en terme de remerciement.",
+			"Je n'ai pas le budget à investir pour payer des artistes étant donné que ce site n'a pas de but lucratif, c'est donc pour cela qu'il est limité à l'entité de mon monde Echoes, mais pas à l'entité de mon studio Fracture Interactive, qui a une politique zéro-IA pour tous les aspects créatifs de ses produits.",
+			"L’intégralité du game design, des mécaniques de jeu, des règles, des différentes cartes, des personnages et du script a été entièrement construite à la main. L’IA n’a servi que pour des formules mathématiques à des fins de balancing pendant le playtest et pour la traduction rapide vers l’autre langue.",
+			"L’IA a également permis de coder tout le côté technique de l’infrastructure de façon accélérée. L’allure frontend du site a été créée de façon hybride, avec l’idée créative du UI/UX venant de moi, notamment par le color hue, les animations, la police d'écriture, l'apparence globale. Bien que l'IA a aidé à mettre le tout en place bien plus rapidement et efficacement.",
+			"Dû à l’usage prononcé de l’IA, et comme je ne prends pas cette side-quest de projet au sérieux, je ne compte pas aller au-delà d’un simple jeu gratuit qui explore mes idées et réflexions sur un nouveau genre de jeu de cartes."
+		],
+		"note": "Si vous figurez parmi les cartes Personas et que vous souhaitez finalement vous retirer de ce jeu, vous en avez le droit, et ce en tout temps. Il ne faut que me contacter ici pour que j’enlève votre carte.",
+		"contact": "Envoyer un courriel"
 	},
 	"rules": {
 		"eyebrow": "Livret de règles",
@@ -140,7 +163,8 @@
 					{ "term": "Carry", "definition": "Persona principale d’un duo, chargée d’infliger la majorité des dégâts." },
 					{ "term": "Support", "definition": "Persona dont le rôle consiste principalement à renforcer ou assister son partenaire." },
 					{ "term": "Réaction", "definition": "Carte activée immédiatement après sa pioche ou en réponse à une action adverse." },
-					{ "term": "BO3", "definition": "Format au meilleur des trois manches." }
+					{ "term": "BO3", "definition": "Format au meilleur des trois manches." },
+					{ "term": "Dé à six faces (D6)", "definition": "Dé numéroté de 1 à 6. Une notation comme « 3 dé 6 » signifie qu’il faut lancer trois dés à six faces et additionner leurs résultats, sauf indication contraire." }
 				]
 			}
 		}
@@ -446,7 +470,7 @@
 					"blocks": [
 						{ "text": "Andrei lance une pièce pour déterminer sa cible :" },
 						{ "items": ["Pile : Persona adverse de gauche.", "Face : Persona adverse de droite."] },
-						{ "text": "Inflige 25 dégâts, plus 10 dégâts supplémentaires pour chaque carte Pisse par terre présente dans la défausse." }
+						{ "text": "Inflige 25 dégâts, plus 10 dégâts supplémentaires pour chaque carte Choix présente dans la défausse." }
 					]
 				},
 				{
@@ -456,7 +480,7 @@
 					"blocks": [
 						{ "text": "Andrei lance 2d6 et récupère autant de Tweak que la somme obtenue pour le tour en cours." },
 						{ "text": "Il cible ensuite une Persona adverse et lui inflige des dégâts équivalents à 10 fois la somme obtenue." },
-						{ "label": "À 50 PV ou moins", "text": "Lance 3d6 à la place." }
+						{ "label": "À 100 PV ou moins", "text": "Lance 3d6 à la place." }
 					]
 				},
 				{
@@ -534,8 +558,12 @@
 					"blocks": [
 						{ "text": "Samuel pop son meilleur mush.", "italic": true },
 						{ "text": "Pendant ce tour, toutes ses capacités coûtent 0 Tweak." },
-						{ "label": "Suceur des maths", "text": "Peut être utilisé sans limite de fois. Après la première utilisation, Samuel subit autant de dégâts que ceux infligés à sa cible." },
-						{ "label": "Santé !", "text": "Samuel peut relancer la pièce autant de fois qu’il le souhaite, jusqu’à obtenir Face. Chaque Pile inflige 20 dégâts supplémentaires à sa cible. Le premier Face inflige 20 dégâts à Samuel et met fin aux lancers." }
+						{ "label": "Suceur des maths", "text": "Peut être utilisé sans limite de fois. Après la première utilisation, Samuel subit le double des dégâts que ceux infligés à sa cible." },
+						{
+							"label": "Santé !",
+							"text": "Samuel peut relancer la pièce autant de fois qu’il le souhaite, jusqu’à obtenir Face. Chaque Pile inflige 20 dégâts supplémentaires à sa cible. Le premier Face inflige 20 dégâts à Samuel et met fin aux lancers."
+						},
+						{ "text": "Sam peut rouler immédiatement son dé 6 pour tenter de revenir à la vie pendant son ultime." }
 					]
 				}
 			]
@@ -666,7 +694,7 @@
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Ping",
-					"blocks": [{ "text": "Xi lance 4d6 et inflige une rafale de dégâts équivalente à la somme des quatre dés." }, { "text": "Elle récupère ensuite autant de PV que de dégâts infligés." }, { "label": "Dégâts et soins", "text": "4 à 24 PV." }]
+					"blocks": [{ "text": "Xi lance 4 dés 6 et inflige une rafale de dégâts équivalente à la somme des quatre dés." }, { "text": "Elle récupère ensuite autant de PV que de dégâts infligés." }, { "label": "Dégâts et soins", "text": "4 à 24 PV." }]
 				},
 				{
 					"kind": "ultimate",
@@ -694,7 +722,7 @@
 					"kind": "ability1",
 					"label": "Capacité 1",
 					"name": "Far-right Punch",
-					"blocks": [{ "text": "Yan inflige des dégâts équivalents à 50 % de ses PV manquants." }, { "label": "Exemple", "text": "À 50 PV sur 110, il lui manque 60 PV. Il inflige donc 30 dégâts." }]
+					"blocks": [{ "text": "Yan inflige des dégâts équivalents à 50 % de ses PV manquants." }, { "label": "Exemple", "text": "À 100 PV sur 220, il lui manque 120 PV. Il inflige donc 60 dégâts." }]
 				},
 				{
 					"kind": "ability2",
@@ -728,7 +756,7 @@
 					"label": "Capacité 1",
 					"name": "Gambling's Power",
 					"blocks": [
-						{ "text": "Jesus lance 1d6 pour déterminer sa cible :" },
+						{ "text": "Jesus lance 1 dé 6 pour déterminer sa cible :" },
 						{ "items": ["1-2 : Inflige 35 dégâts à son allié, s’il est encore en vie.", "3-4 : Inflige 35 dégâts à la Persona adverse de gauche.", "5-6 : Inflige 35 dégâts à la Persona adverse de droite."] }
 					]
 				},
@@ -975,7 +1003,7 @@
 					"kind": "ability2",
 					"label": "Capacité 2",
 					"name": "Samurai Slash",
-					"blocks": [{ "text": "Seb effectue un slash en X sur une Persona adverse de son choix, lui inflige 40 dégâts et la marque." }, { "text": "Jusqu’à la fin du prochain tour de Seb, il inflige 50 % de dégâts supplémentaires à la cible marquée." }]
+					"blocks": [{ "text": "Seb effectue un slash en X sur une Persona adverse de son choix, lui inflige 50 dégâts et la marque." }, { "text": "Jusqu’à la fin du prochain tour de Seb, il inflige 50 % de dégâts supplémentaires à la cible marquée." }]
 				},
 				{
 					"kind": "ultimate",

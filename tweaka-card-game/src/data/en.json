@@ -9,6 +9,10 @@
 		"ruleSectionsAria": "Rule sections",
 		"bestiarySectionsAria": "Bestiary sections",
 		"languageAria": "Change language",
+		"muteMusic": "Mute music",
+		"unmuteMusic": "Unmute music",
+		"diceNotation": "{count} D6",
+		"diceExplanation": "Number of six-sided dice to roll: {count}.",
 		"collection": "Collection",
 		"close": "Close",
 		"personaSheet": "Persona Sheet",
@@ -34,8 +38,27 @@
 	},
 	"menu": {
 		"play": "Play",
+		"playSubtitle": "Start a game",
 		"rules": "Rules",
-		"bestiary": "Bestiary"
+		"rulesSubtitle": "Learn the mechanics",
+		"bestiary": "Bestiary",
+		"bestiarySubtitle": "Discover the universe",
+		"credits": "Credits",
+		"creditsSubtitle": "About the project"
+	},
+	"credits": {
+		"eyebrow": "About the project",
+		"title": "Credits",
+		"paragraphs": [
+			"This card game originally came from a joke by Andrei Bituleanu, made for fun. I have no intention of selling it, since generative AI was used to apply filters to and regenerate real photographs of the game’s characters.",
+			"It would be my pleasure if any artist wished to redesign the AI-generated images with their own hand-drawn artwork, especially the Full Arts. They would receive the proper credit and thanks for their contribution.",
+			"I do not have the budget to hire artists because this site is non-profit. This is why the project is limited to my Echoes universe and is not an entity of my studio, Fracture Interactive, which has a zero-AI policy for every creative aspect of its products.",
+			"All of the game design, gameplay mechanics, rules, different cards, characters, and script was built entirely by hand. AI was only used for mathematical formulas for balancing during playtesting and for quickly translating the content into the other language.",
+			"AI also made it possible to code the technical infrastructure more quickly. The site’s frontend appearance was created through a hybrid process, with the creative UI/UX direction, like the color hue, the overall approach, the animations, the font-family and more coming from me. Although, AI has helped me build this infrastructure much faster.",
+			"Because AI was used extensively, and because I do not take this project side quest seriously, I do not intend to take it beyond a simple free game that explores my ideas and thoughts on a new kind of card game."
+		],
+		"note": "If you appear among the Persona cards and ultimately wish to be removed from this game, you have the right to do so at any time. Simply contact me here so I can remove your card.",
+		"contact": "Send an email"
 	},
 	"rules": {
 		"eyebrow": "Rulebook",
@@ -137,7 +160,8 @@
 					{ "term": "Carry", "definition": "The main Persona in a duo, responsible for most of its damage." },
 					{ "term": "Support", "definition": "A Persona focused on reinforcing or assisting a partner." },
 					{ "term": "Reaction", "definition": "A card activated immediately after drawing or in response to an opponent's action." },
-					{ "term": "BO3", "definition": "A best of three match format." }
+					{ "term": "BO3", "definition": "A best of three match format." },
+					{ "term": "Six-sided die (D6)", "definition": "A die with six faces numbered from 1 to 6. A notation such as 3 D6 means rolling three six-sided dice and adding their results unless stated otherwise." }
 				]
 			}
 		}
@@ -443,7 +467,7 @@
 					"blocks": [
 						{ "text": "Andrei flips a coin to determine his target:" },
 						{ "items": ["Heads: left opposing Persona.", "Tails: right opposing Persona."] },
-						{ "text": "Deals 25 damage, plus 10 additional damage for each Pisse par terre card in the discard pile." }
+						{ "text": "Deals 25 damage, plus 10 additional damage for each Choice card in the discard pile." }
 					]
 				},
 				{
@@ -453,7 +477,7 @@
 					"blocks": [
 						{ "text": "Andrei rolls 2d6 and gains Tweak equal to the sum for the current turn." },
 						{ "text": "He then targets an opposing Persona and deals damage equal to 10 times the sum rolled." },
-						{ "label": "At 50 HP or less", "text": "Roll 3d6 instead." }
+						{ "label": "At 100 HP or less", "text": "Roll 3d6 instead." }
 					]
 				},
 				{
@@ -527,12 +551,13 @@
 				{
 					"kind": "ultimate",
 					"label": "Ultimate",
-					"name": "Mush Live",
+					"name": "Mush Now",
 					"blocks": [
 						{ "text": "Samuel pops his best mush.", "italic": true },
 						{ "text": "For this turn, all his abilities cost 0 Tweak." },
-						{ "label": "Math Adept", "text": "May be used without limit. After the first use, Samuel takes damage equal to the damage dealt to his target." },
-						{ "label": "Cheers!", "text": "Samuel may flip the coin as many times as he wants until he gets Tails. Each Heads deals 20 additional damage. The first Tails deals 20 damage to Samuel and ends the flips." }
+						{ "label": "Math Adept", "text": "May be used without limit. After the first use, Samuel takes damage equal to double the damage dealt to his target." },
+						{ "label": "Cheers!", "text": "Samuel may flip the coin as many times as he wants until he gets Tails. Each Heads deals 20 additional damage. The first Tails deals 20 damage to Samuel and ends the flips." },
+						{ "text": "Sam can roll to try to come back to life immediately after dying while on his ultimate." }
 					]
 				}
 			]
@@ -691,7 +716,7 @@
 					"kind": "ability1",
 					"label": "Ability 1",
 					"name": "Far-right Punch",
-					"blocks": [{ "text": "Yan deals damage equal to 50% of his missing HP." }, { "label": "Example", "text": "At 50 HP out of 110, he is missing 60 HP and therefore deals 30 damage." }]
+					"blocks": [{ "text": "Yan deals damage equal to 50% of his missing HP." }, { "label": "Example", "text": "At 100 HP out of 220, he is missing 120 HP and therefore deals 60 damage." }]
 				},
 				{
 					"kind": "ability2",
@@ -964,7 +989,7 @@
 					"kind": "ability2",
 					"label": "Ability 2",
 					"name": "Samurai Slash",
-					"blocks": [{ "text": "Seb performs an X-shaped slash on an opposing Persona of his choice, dealing 40 damage and marking them." }, { "text": "Until the end of Seb’s next turn, he deals 50% more damage to the marked target." }]
+					"blocks": [{ "text": "Seb performs an X-shaped slash on an opposing Persona of his choice, dealing 50 damage and marking them." }, { "text": "Until the end of Seb’s next turn, he deals 50% more damage to the marked target." }]
 				},
 				{
 					"kind": "ultimate",

@@ -5,7 +5,7 @@ import { personaDefinitions, type AbilityKind, type PersonaCost, type PersonaSub
 export type { AbilityKind, PersonaSubclass } from "./personas";
 
 export type Language = "en" | "fr";
-export type View = "menu" | "play" | "rules" | "bestiary";
+export type View = "menu" | "play" | "rules" | "bestiary" | "credits";
 export type BestiarySection = "personas" | "objects" | "reactions" | "synergies";
 export type SynergyTone = "synergistic" | "antagonistic";
 
@@ -76,6 +76,10 @@ export type GameContent = {
 		ruleSectionsAria: string;
 		bestiarySectionsAria: string;
 		languageAria: string;
+		muteMusic: string;
+		unmuteMusic: string;
+		diceNotation: string;
+		diceExplanation: string;
 		collection: string;
 		close: string;
 		personaSheet: string;
@@ -101,8 +105,20 @@ export type GameContent = {
 	};
 	menu: {
 		play: string;
+		playSubtitle: string;
 		rules: string;
+		rulesSubtitle: string;
 		bestiary: string;
+		bestiarySubtitle: string;
+		credits: string;
+		creditsSubtitle: string;
+	};
+	credits: {
+		eyebrow: string;
+		title: string;
+		paragraphs: string[];
+		note: string;
+		contact: string;
 	};
 	rules: {
 		eyebrow: string;
