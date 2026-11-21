@@ -57,6 +57,15 @@
 			"AI also made it possible to code the technical infrastructure more quickly. The site’s frontend appearance was created through a hybrid process, with the creative UI/UX direction, like the color hue, the overall approach, the animations, the font-family and more coming from me. Although, AI has helped me build this infrastructure much faster.",
 			"Because AI was used extensively, and because I do not take this project side quest seriously, I do not intend to take it beyond a simple free game that explores my ideas and thoughts on a new kind of card game."
 		],
+		"musicCredit": {
+			"label": "Music",
+			"title": "Veritas",
+			"by": "by",
+			"author": "Adiutorium",
+			"license": "CC0",
+			"url": "https://opengameart.org/content/veritas",
+			"licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+		},
 		"note": "If you appear among the Persona cards and ultimately wish to be removed from this game, you have the right to do so at any time. Simply contact me here so I can remove your card.",
 		"contact": "Send an email"
 	},

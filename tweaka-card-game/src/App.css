@@ -647,6 +647,53 @@
 	line-height: 1.72;
 }
 
+.credits-music {
+	display: grid;
+	justify-items: center;
+	gap: 0.45rem;
+	margin-top: clamp(2rem, 4vw, 3rem);
+	padding: 1rem 1.25rem;
+	background: rgba(31, 3, 13, 0.42);
+	box-shadow:
+		inset 0 0 0 1px rgba(224, 186, 125, 0.16),
+		inset 0 0.18rem var(--gold);
+}
+
+.credits-music > span {
+	color: var(--gold-soft);
+	font-family: var(--control);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.credits-music p {
+	margin: 0;
+	color: #e3c6bb;
+	font-size: 0.9rem;
+	line-height: 1.5;
+}
+
+.credits-music strong {
+	color: var(--cream);
+	font-weight: 700;
+}
+
+.credits-music a {
+	color: var(--gold);
+	text-decoration-color: rgba(224, 186, 125, 0.48);
+	text-underline-offset: 0.2em;
+	transition:
+		color 160ms ease,
+		text-decoration-color 160ms ease;
+}
+
+.credits-music a:hover {
+	color: var(--cream);
+	text-decoration-color: var(--cream);
+}
+
 .credits-copy footer {
 	display: grid;
 	justify-items: center;

@@ -57,6 +57,15 @@
 			"L’IA a également permis de coder tout le côté technique de l’infrastructure de façon accélérée. L’allure frontend du site a été créée de façon hybride, avec l’idée créative du UI/UX venant de moi, notamment par le color hue, les animations, la police d'écriture, l'apparence globale. Bien que l'IA a aidé à mettre le tout en place bien plus rapidement et efficacement.",
 			"Dû à l’usage prononcé de l’IA, et comme je ne prends pas cette side-quest de projet au sérieux, je ne compte pas aller au-delà d’un simple jeu gratuit qui explore mes idées et réflexions sur un nouveau genre de jeu de cartes."
 		],
+		"musicCredit": {
+			"label": "Musique",
+			"title": "Veritas",
+			"by": "par",
+			"author": "Adiutorium",
+			"license": "CC0",
+			"url": "https://opengameart.org/content/veritas",
+			"licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+		},
 		"note": "Si vous figurez parmi les cartes Personas et que vous souhaitez finalement vous retirer de ce jeu, vous en avez le droit, et ce en tout temps. Il ne faut que me contacter ici pour que j’enlève votre carte.",
 		"contact": "Envoyer un courriel"
 	},

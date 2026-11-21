@@ -252,6 +252,19 @@ function Credits({ onMenu, content, language, onLanguageChange, musicMuted, onMu
 							<p key={paragraph}>{paragraph}</p>
 						))}
 					</div>
+					<aside className="credits-music" aria-label={content.credits.musicCredit.label}>
+						<span>{content.credits.musicCredit.label}</span>
+						<p>
+							<a href={content.credits.musicCredit.url} target="_blank" rel="noreferrer">
+								{content.credits.musicCredit.title}
+							</a>{" "}
+							{content.credits.musicCredit.by} <strong>{content.credits.musicCredit.author}</strong>
+							{" · "}
+							<a href={content.credits.musicCredit.licenseUrl} target="_blank" rel="noreferrer">
+								{content.credits.musicCredit.license}
+							</a>
+						</p>
+					</aside>
 					<footer>
 						<p>{content.credits.note}</p>
 						<a href="mailto:andrei.bituleanu@umontreal.ca">{content.credits.contact}</a>

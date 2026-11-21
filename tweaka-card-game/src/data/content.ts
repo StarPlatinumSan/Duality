@@ -117,6 +117,15 @@ export type GameContent = {
 		eyebrow: string;
 		title: string;
 		paragraphs: string[];
+		musicCredit: {
+			label: string;
+			title: string;
+			by: string;
+			author: string;
+			license: string;
+			url: string;
+			licenseUrl: string;
+		};
 		note: string;
 		contact: string;
 	};
