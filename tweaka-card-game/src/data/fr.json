@@ -341,7 +341,7 @@
 				{
 					"kind": "passive",
 					"label": "Passif",
-					"name": "Amateur de toppes",
+					"name": "Fumer ne tue pas",
 					"blocks": [{ "text": "Paul aime les toppes. Au début de chacun de ses tours, il régénère 10 PV." }]
 				},
 				{
@@ -506,7 +506,7 @@
 					"name": "Négativité",
 					"blocks": [
 						{ "text": "Marion libère toute sa négativité dans un râlage insupportable.", "italic": true },
-						{ "text": "Toutes les autres cartes sur le terrain, alliées comme adverses, subissent des dégâts psychiques équivalents à 50 % de leurs PV restants." },
+						{ "text": "Toutes les cartes adverses sur le terrain subissent des dégâts psychiques équivalents à 10 + 50 % de leurs PV restants." },
 						{ "text": "Marion n’est pas affectée." }
 					]
 				}

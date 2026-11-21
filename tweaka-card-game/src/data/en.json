@@ -344,7 +344,7 @@
 				{
 					"kind": "ability1",
 					"label": "Ability 1",
-					"name": "Sang de Marseille",
+					"name": "Blood of Marseille",
 					"blocks": [{ "text": "Deals 15 damage to both opposing Personas. He then draws a Reaction from the opponent's deck and discards it without using it." }]
 				},
 				{
@@ -503,7 +503,7 @@
 					"name": "Negativity",
 					"blocks": [
 						{ "text": "Marion unleashes all her negativity in an unbearable rant.", "italic": true },
-						{ "text": "Every other card on the field, allied and opposing, takes psychic damage equal to 50% of its remaining HP." },
+						{ "text": "Every opposing card on the field, takes psychic damage equal to 10 + 50% of its remaining HP." },
 						{ "text": "Marion is unaffected." }
 					]
 				}
