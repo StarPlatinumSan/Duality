@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import "./App.css";
 import { contentByLanguage, type BestiarySection, type GameContent, type Language, type Persona, type RuleCard, type SynergyTone, type View } from "./data/content";
+import hitSoundUrl from "./audio/hit.mp3";
 import backgroundMusic from "./music/veritas.mp3";
+
+const HIT_SOUND_VOLUME = 0.32;
 
 type MusicControlProps = {
 	musicMuted: boolean;
@@ -91,12 +94,7 @@ function DiceNotation({ count, content }: { count: string; content: GameContent 
 			{isOpen &&
 				position &&
 				createPortal(
-					<span
-						id={tooltipId}
-						className={`dice-tooltip is-${position.placement}`}
-						style={{ top: position.top, left: position.left, maxWidth: position.maxWidth }}
-						role="tooltip"
-					>
+					<span id={tooltipId} className={`dice-tooltip is-${position.placement}`} style={{ top: position.top, left: position.left, maxWidth: position.maxWidth }} role="tooltip">
 						{explanation}
 					</span>,
 					document.body,
@@ -132,6 +130,23 @@ function safelyPlay(audio: HTMLAudioElement) {
 	void audio.play().catch(() => undefined);
 }
 
+function findImpactOffset(buffer: AudioBuffer) {
+	const audibleThreshold = 0.012;
+	const safetyLeadSamples = Math.round(buffer.sampleRate * 0.004);
+	let firstAudibleSample = 0;
+
+	search: for (let sample = 0; sample < buffer.length; sample += 1) {
+		for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+			if (Math.abs(buffer.getChannelData(channel)[sample]) >= audibleThreshold) {
+				firstAudibleSample = sample;
+				break search;
+			}
+		}
+	}
+
+	return Math.max(0, firstAudibleSample - safetyLeadSamples) / buffer.sampleRate;
+}
+
 function LanguageToggle({ language, onChange, ariaLabel, className = "" }: { language: Language; onChange: (language: Language) => void; ariaLabel: string; className?: string }) {
 	return (
 		<div className={`language-toggle${className ? ` ${className}` : ""}`} role="group" aria-label={ariaLabel}>
@@ -153,30 +168,95 @@ function MusicToggle({ muted, onToggle, content }: { muted: boolean; onToggle: (
 			<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
 				<path className="music-speaker" d="M4 9h4l5-4v14l-5-4H4V9Z" />
 				{muted ? (
-					<path className="music-state" d="m17 9 4 4m0-4-4 4" />
+					<path className="music-state" d="m17 8 5 4-5 4Z" />
 				) : (
-					<>
-						<path className="music-state" d="M16 9.2c1.4 1.5 1.4 4.1 0 5.6" />
-						<path className="music-state music-wave-outer" d="M19 6.7c2.9 2.9 2.9 7.7 0 10.6" />
-					</>
+					<path className="music-state" d="M17 8v8m4-8v8" />
 				)}
 			</svg>
 		</button>
 	);
 }
 
-function ScreenHeader({ onMenu, content, language, onLanguageChange, musicMuted, onMusicToggle }: { onMenu: () => void; content: GameContent; language: Language; onLanguageChange: (language: Language) => void } & MusicControlProps) {
+function ScreenHeader({
+	onMenu,
+	content,
+	language,
+	onLanguageChange,
+	musicMuted,
+	onMusicToggle,
+	collapsible = false,
+	extraAction,
+	menuOpen: controlledMenuOpen,
+	onMenuOpenChange,
+	hideMenuToggle = false,
+}: {
+	onMenu: () => void;
+	content: GameContent;
+	language: Language;
+	onLanguageChange: (language: Language) => void;
+	collapsible?: boolean;
+	extraAction?: { label: string; onClick: () => void };
+	menuOpen?: boolean;
+	onMenuOpenChange?: (open: boolean) => void;
+	hideMenuToggle?: boolean;
+} & MusicControlProps) {
+	const [internalMenuOpen, setInternalMenuOpen] = useState(false);
+	const menuOpen = controlledMenuOpen ?? internalMenuOpen;
+	const setMenuOpen = (open: boolean) => {
+		if (controlledMenuOpen === undefined) setInternalMenuOpen(open);
+		onMenuOpenChange?.(open);
+	};
+	const menuId = useId();
+
+	useEffect(() => {
+		if (!menuOpen) return;
+		const closeOnEscape = (event: KeyboardEvent) => {
+			if (event.key === "Escape") setMenuOpen(false);
+		};
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [menuOpen]);
+
 	return (
-		<header className="screen-header">
+		<header className={`screen-header${collapsible ? " is-collapsible" : ""}${menuOpen ? " is-menu-open" : ""}`}>
 			<button className="header-wordmark" type="button" onClick={onMenu}>
 				Duality
 			</button>
-			<div className="screen-header-actions">
+			{collapsible && <button className="settings-menu-scrim" type="button" tabIndex={menuOpen ? 0 : -1} aria-label={content.ui.closeSettings} onClick={() => setMenuOpen(false)} />}
+			{collapsible && !hideMenuToggle && (
+				<button className="settings-menu-toggle" type="button" aria-label={menuOpen ? content.ui.closeSettings : content.ui.openSettings} aria-expanded={menuOpen} aria-controls={menuId} onClick={() => setMenuOpen(!menuOpen)}>
+					<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+						<circle cx="12" cy="12" r="3.2" />
+						<path d="M12 2.5v2.1M12 19.4v2.1M2.5 12h2.1M19.4 12h2.1M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M18.7 5.3l-1.5 1.5M6.8 17.2l-1.5 1.5" />
+						<circle cx="12" cy="12" r="7.4" />
+					</svg>
+				</button>
+			)}
+			<div className="screen-header-actions" id={menuId} aria-label={collapsible ? content.ui.settings : undefined}>
 				<MusicToggle muted={musicMuted} onToggle={onMusicToggle} content={content} />
-				<LanguageToggle language={language} onChange={onLanguageChange} ariaLabel={content.ui.languageAria} />
+				<LanguageToggle
+					language={language}
+					onChange={(nextLanguage) => {
+						onLanguageChange(nextLanguage);
+						if (collapsible) setMenuOpen(false);
+					}}
+					ariaLabel={content.ui.languageAria}
+				/>
 				<button className="menu-return" type="button" onClick={onMenu}>
 					{content.ui.return}
 				</button>
+				{extraAction && (
+					<button
+						className="header-extra-action"
+						type="button"
+						onClick={() => {
+							setMenuOpen(false);
+							extraAction.onClick();
+						}}
+					>
+						{extraAction.label}
+					</button>
+				)}
 			</div>
 		</header>
 	);
@@ -226,13 +306,932 @@ function MainMenu({ onSelect, content, language, onLanguageChange, musicMuted, o
 	);
 }
 
+type PlayerIndex = 0 | 1;
+type PlayPhase = "setup" | "battle";
+type SelectedTeam = [string | null, string | null];
+type SelectedTeams = [SelectedTeam, SelectedTeam];
+type BattlePersona = { id: string; currentHp: number; maxHp: number; damageTrailHp: number; hitFlash: number; inert: boolean };
+type BattleTeams = [BattlePersona[], BattlePersona[]];
+type PendingPlayAction = { kind: "damage"; sourcePlayer: PlayerIndex; sourcePersonaId: string } | { kind: "bind-tenacity"; player: PlayerIndex } | null;
+type PendingUltimate = { player: PlayerIndex; sourcePersonaId: string; personaName: string } | null;
+type TargetingDrag = {
+	pointerId: number;
+	sourcePlayer: PlayerIndex;
+	sourcePersonaId: string;
+	startX: number;
+	startY: number;
+	currentX: number;
+	currentY: number;
+	moved: boolean;
+	hoveredTarget: { player: PlayerIndex; personaId: string } | null;
+};
+
+function TargetingTrail({ drag }: { drag: TargetingDrag }) {
+	return createPortal(
+		<svg className="battle-targeting-trail" width="100%" height="100%" aria-hidden="true">
+			<line className="battle-targeting-trail-core" x1={drag.startX} y1={drag.startY} x2={drag.currentX} y2={drag.currentY} />
+			<circle className="battle-targeting-origin" cx={drag.startX} cy={drag.startY} r="5" />
+			<circle className="battle-targeting-reticle" cx={drag.currentX} cy={drag.currentY} r="12" />
+			<circle className="battle-targeting-point" cx={drag.currentX} cy={drag.currentY} r="3" />
+		</svg>,
+		document.body,
+	);
+}
+
+function replaceTokens(template: string, tokens: Record<string, string | number>) {
+	return Object.entries(tokens).reduce((result, [token, value]) => result.replaceAll(`{${token}}`, String(value)), template);
+}
+
+function getAbilityCost(persona: Persona, kind: "ability1" | "ability2" | "ultimate") {
+	const cost = persona.abilities.find((ability) => ability.kind === kind)?.cost;
+	if (!cost) return "0";
+	return cost.match(/\d+(?:[.,]\d+)?/)?.[0] ?? "?";
+}
+
+function findSynergy(content: GameContent, personaIds: string[]) {
+	if (personaIds.length !== 2) return null;
+	const selectedNames = personaIds.map((personaId) => content.personas.find((persona) => persona.id === personaId)?.name).filter(Boolean) as string[];
+
+	for (const category of content.bestiary.synergies) {
+		const synergy = category.synergies.find((entry) => selectedNames.every((name) => entry.personas.some((persona) => persona.name === name)));
+		if (synergy) return { category, synergy };
+	}
+
+	return null;
+}
+
 function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusicToggle }: { onMenu: () => void; content: GameContent; language: Language; onLanguageChange: (language: Language) => void } & MusicControlProps) {
+	const [phase, setPhase] = useState<PlayPhase>("setup");
+	const [activePicker, setActivePicker] = useState<PlayerIndex>(0);
+	const [personaPicker, setPersonaPicker] = useState<{ player: PlayerIndex; slot: number } | null>(null);
+	const [selectedTeams, setSelectedTeams] = useState<SelectedTeams>([
+		[null, null],
+		[null, null],
+	]);
+	const [lockedTeams, setLockedTeams] = useState<[boolean, boolean]>([false, false]);
+	const [battleTeams, setBattleTeams] = useState<BattleTeams | null>(null);
+	const [activePlayer, setActivePlayer] = useState<PlayerIndex>(0);
+	const [turnNumber, setTurnNumber] = useState(1);
+	const [tweakPools, setTweakPools] = useState<[number, number]>([0, 0]);
+	const [openPlayerPanel, setOpenPlayerPanel] = useState<{ player: PlayerIndex; kind: "reactions" | "objects" } | null>(null);
+	const [selectedReactionSlot, setSelectedReactionSlot] = useState<{ player: PlayerIndex; slot: number } | null>(null);
+	const [pendingAction, setPendingAction] = useState<PendingPlayAction>(null);
+	const [tenacityBindings, setTenacityBindings] = useState<[string | null, string | null]>([null, null]);
+	const [selectedPersonaId, setSelectedPersonaId] = useState<string | null>(null);
+	const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
+	const [targetingDrag, setTargetingDrag] = useState<TargetingDrag | null>(null);
+	const [hoveredBattleTarget, setHoveredBattleTarget] = useState<{ player: PlayerIndex; personaId: string } | null>(null);
+	const [pendingUltimate, setPendingUltimate] = useState<PendingUltimate>(null);
+	const damageTrailTimers = useRef<Record<string, number>>({});
+	const hitFlashTimers = useRef<Record<string, number>>({});
+	const hitAudioContextRef = useRef<AudioContext | null>(null);
+	const hitAudioBufferRef = useRef<AudioBuffer | null>(null);
+	const hitAudioOffsetRef = useRef(0);
+	const hitAudioLoadRef = useRef<Promise<void> | null>(null);
+	const hitFallbackAudioRef = useRef<HTMLAudioElement | null>(null);
+	const targetingDragRef = useRef<TargetingDrag | null>(null);
+	const suppressTargetClickRef = useRef(false);
+	const selectedPersona = selectedPersonaId ? (content.personas.find((persona) => persona.id === selectedPersonaId) ?? null) : null;
+	const playerLabels: [string, string] = [content.playtest.playerOne, content.playtest.playerTwo];
+
+	const prepareHitSound = useCallback(() => {
+		if (hitAudioBufferRef.current) return Promise.resolve();
+		if (hitAudioLoadRef.current) return hitAudioLoadRef.current;
+
+		hitAudioLoadRef.current = (async () => {
+			const AudioContextConstructor = window.AudioContext ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+			if (!AudioContextConstructor) return;
+
+			const context = hitAudioContextRef.current ?? new AudioContextConstructor({ latencyHint: "interactive" });
+			hitAudioContextRef.current = context;
+			const response = await fetch(hitSoundUrl);
+			if (!response.ok) throw new Error(`Unable to load hit sound: ${response.status}`);
+			const buffer = await context.decodeAudioData(await response.arrayBuffer());
+			hitAudioBufferRef.current = buffer;
+			hitAudioOffsetRef.current = findImpactOffset(buffer);
+		})().catch(() => undefined);
+
+		return hitAudioLoadRef.current;
+	}, []);
+
+	const playHitSound = useCallback(() => {
+		const context = hitAudioContextRef.current;
+		const buffer = hitAudioBufferRef.current;
+		if (context && buffer && context.state === "running") {
+			const source = context.createBufferSource();
+			const gain = context.createGain();
+			source.buffer = buffer;
+			gain.gain.value = HIT_SOUND_VOLUME;
+			source.connect(gain);
+			gain.connect(context.destination);
+			source.start(0, hitAudioOffsetRef.current);
+			return;
+		}
+		if (context?.state === "suspended") void context.resume();
+
+		const fallback = hitFallbackAudioRef.current;
+		if (fallback) {
+			fallback.pause();
+			try {
+				fallback.currentTime = hitAudioOffsetRef.current;
+			} catch {
+				fallback.currentTime = 0;
+			}
+			safelyPlay(fallback);
+		}
+		void prepareHitSound();
+	}, [prepareHitSound]);
+
+	useEffect(() => {
+		if (!selectedPersonaId) return;
+		const previousOverflow = document.body.style.overflow;
+		const closeOnEscape = (event: KeyboardEvent) => {
+			if (event.key === "Escape") setSelectedPersonaId(null);
+		};
+		document.body.style.overflow = "hidden";
+		window.addEventListener("keydown", closeOnEscape);
+		return () => {
+			document.body.style.overflow = previousOverflow;
+			window.removeEventListener("keydown", closeOnEscape);
+		};
+	}, [selectedPersonaId]);
+
+	useEffect(() => {
+		if (!pendingUltimate) return;
+		const closeOnEscape = (event: KeyboardEvent) => {
+			if (event.key === "Escape") setPendingUltimate(null);
+		};
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [pendingUltimate]);
+
+	useEffect(() => {
+		if (!personaPicker) return;
+		const closeOnEscape = (event: KeyboardEvent) => {
+			if (event.key === "Escape" && !selectedPersonaId) setPersonaPicker(null);
+		};
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [personaPicker, selectedPersonaId]);
+
+	useEffect(() => {
+		const fallback = new Audio(hitSoundUrl);
+		fallback.preload = "auto";
+		fallback.volume = HIT_SOUND_VOLUME;
+		fallback.load();
+		hitFallbackAudioRef.current = fallback;
+		void prepareHitSound();
+
+		const unlockHitAudio = () => {
+			void prepareHitSound();
+			const context = hitAudioContextRef.current;
+			if (context?.state === "suspended") void context.resume();
+		};
+
+		window.addEventListener("pointerdown", unlockHitAudio, { capture: true, once: true });
+		window.addEventListener("keydown", unlockHitAudio, { capture: true, once: true });
+
+		return () => {
+			window.removeEventListener("pointerdown", unlockHitAudio, true);
+			window.removeEventListener("keydown", unlockHitAudio, true);
+			fallback.pause();
+			hitFallbackAudioRef.current = null;
+			const context = hitAudioContextRef.current;
+			if (context && context.state !== "closed") void context.close();
+			hitAudioContextRef.current = null;
+			hitAudioBufferRef.current = null;
+			hitAudioLoadRef.current = null;
+		};
+	}, [prepareHitSound]);
+
+	useEffect(
+		() => () => {
+			Object.values(damageTrailTimers.current).forEach((timer) => window.clearTimeout(timer));
+			Object.values(hitFlashTimers.current).forEach((timer) => window.clearTimeout(timer));
+		},
+		[],
+	);
+
+	const togglePersona = (persona: Persona) => {
+		if (persona.placeholder || lockedTeams[activePicker]) return;
+		setSelectedTeams((current) => {
+			const next: SelectedTeams = [[...current[0]], [...current[1]]];
+			const selected = next[activePicker];
+			const selectedIndex = selected.indexOf(persona.id);
+			if (selectedIndex >= 0) selected[selectedIndex] = null;
+			else {
+				const emptySlot = selected.indexOf(null);
+				if (emptySlot >= 0) selected[emptySlot] = persona.id;
+			}
+			return next;
+		});
+	};
+
+	const openPersonaPicker = (player: PlayerIndex, slot: number) => {
+		if (lockedTeams[player]) return;
+		setActivePicker(player);
+		if (window.matchMedia("(max-width: 680px)").matches) setPersonaPicker({ player, slot });
+		else setPersonaPicker(null);
+	};
+
+	const selectPersonaForSlot = (persona: Persona) => {
+		if (!personaPicker || persona.placeholder || lockedTeams[personaPicker.player]) return;
+		setSelectedTeams((current) => {
+			const next: SelectedTeams = [[...current[0]], [...current[1]]];
+			const team = next[personaPicker.player];
+			const existingIndex = team.indexOf(persona.id);
+			if (existingIndex >= 0 && existingIndex !== personaPicker.slot) {
+				[team[existingIndex], team[personaPicker.slot]] = [team[personaPicker.slot], team[existingIndex]];
+			} else team[personaPicker.slot] = persona.id;
+			return next;
+		});
+		setPersonaPicker(null);
+	};
+
+	const toggleTeamLock = (player: PlayerIndex) => {
+		if (selectedTeams[player].some((personaId) => !personaId)) return;
+		const wasLocked = lockedTeams[player];
+		setLockedTeams((current) => {
+			const next: [boolean, boolean] = [...current];
+			next[player] = !current[player];
+			return next;
+		});
+		setActivePicker(wasLocked ? player : player === 0 ? 1 : 0);
+	};
+
+	const startBattle = () => {
+		if (!lockedTeams.every(Boolean)) return;
+		const teams = selectedTeams.map((team) =>
+			team
+				.filter((personaId): personaId is string => Boolean(personaId))
+				.map((personaId) => {
+					const persona = content.personas.find((entry) => entry.id === personaId);
+					const maxHp = Math.max(1, Number(persona?.health) || 1);
+					return { id: personaId, currentHp: maxHp, maxHp, damageTrailHp: maxHp, hitFlash: 0, inert: false };
+				}),
+		) as BattleTeams;
+		setBattleTeams(teams);
+		const generatedTweak = selectedTeams.map((team) => team.reduce((total, personaId) => total + (Number(content.personas.find((persona) => persona.id === personaId)?.tweak) || 0), 0)) as [number, number];
+		setTweakPools([generatedTweak[0], 0]);
+		setActivePlayer(0);
+		setTurnNumber(1);
+		setOpenPlayerPanel(null);
+		setSelectedReactionSlot(null);
+		setPendingAction(null);
+		setTenacityBindings([null, null]);
+		setPendingUltimate(null);
+		setPersonaPicker(null);
+		targetingDragRef.current = null;
+		setTargetingDrag(null);
+		setPhase("battle");
+	};
+
+	const queueDamageTrail = (player: PlayerIndex, personaId: string) => {
+		const timerKey = `${player}:${personaId}`;
+		const existingTimer = damageTrailTimers.current[timerKey];
+		if (existingTimer) window.clearTimeout(existingTimer);
+
+		damageTrailTimers.current[timerKey] = window.setTimeout(() => {
+			setBattleTeams((current) => {
+				if (!current) return current;
+				const next = current.map((team) => team.map((persona) => ({ ...persona }))) as BattleTeams;
+				const target = next[player].find((persona) => persona.id === personaId);
+				if (target) target.damageTrailHp = target.currentHp;
+				return next;
+			});
+			delete damageTrailTimers.current[timerKey];
+		}, 850);
+	};
+
+	const queueHitFlash = (player: PlayerIndex, personaId: string) => {
+		const timerKey = `${player}:${personaId}`;
+		const existingTimer = hitFlashTimers.current[timerKey];
+		if (existingTimer) window.clearTimeout(existingTimer);
+
+		hitFlashTimers.current[timerKey] = window.setTimeout(() => {
+			setBattleTeams((current) => {
+				if (!current) return current;
+				const next = current.map((team) => team.map((persona) => ({ ...persona }))) as BattleTeams;
+				const target = next[player].find((persona) => persona.id === personaId);
+				if (target) target.hitFlash = 0;
+				return next;
+			});
+			delete hitFlashTimers.current[timerKey];
+		}, 190);
+	};
+
+	const damagePersona = (player: PlayerIndex, personaId: string, damage: number) => {
+		playHitSound();
+		setBattleTeams((current) => {
+			if (!current) return current;
+			const next = current.map((team) => team.map((persona) => ({ ...persona }))) as BattleTeams;
+			const target = next[player].find((persona) => persona.id === personaId);
+			if (target) {
+				target.damageTrailHp = Math.max(target.damageTrailHp, target.currentHp);
+				target.currentHp = Math.max(0, target.currentHp - damage);
+				target.hitFlash += 1;
+			}
+			return next;
+		});
+		queueDamageTrail(player, personaId);
+		queueHitFlash(player, personaId);
+	};
+
+	const damageTeam = (player: PlayerIndex, damage: number) => {
+		playHitSound();
+		setBattleTeams((current) => {
+			if (!current) return current;
+			const next = current.map((team) => team.map((persona) => ({ ...persona }))) as BattleTeams;
+			next[player].forEach((persona) => {
+				persona.damageTrailHp = Math.max(persona.damageTrailHp, persona.currentHp);
+				persona.currentHp = Math.max(0, persona.currentHp - damage);
+				persona.hitFlash += 1;
+			});
+			return next;
+		});
+		battleTeams?.[player].forEach((persona) => {
+			queueDamageTrail(player, persona.id);
+			queueHitFlash(player, persona.id);
+		});
+	};
+
+	const beginTargetingDrag = (event: ReactPointerEvent<HTMLButtonElement>, sourcePlayer: PlayerIndex, sourcePersonaId: string) => {
+		if (event.pointerType === "mouse" && event.button !== 0) return;
+		const bounds = event.currentTarget.getBoundingClientRect();
+		const drag: TargetingDrag = {
+			pointerId: event.pointerId,
+			sourcePlayer,
+			sourcePersonaId,
+			startX: bounds.left + bounds.width / 2,
+			startY: bounds.top + bounds.height / 2,
+			currentX: event.clientX,
+			currentY: event.clientY,
+			moved: false,
+			hoveredTarget: null,
+		};
+		suppressTargetClickRef.current = false;
+		targetingDragRef.current = drag;
+		setTargetingDrag(drag);
+		setHoveredBattleTarget(null);
+		setPendingAction(null);
+		setOpenPlayerPanel(null);
+	};
+
+	useEffect(() => {
+		const findTarget = (clientX: number, clientY: number, sourcePlayer: PlayerIndex) => {
+			const card = document.elementFromPoint(clientX, clientY)?.closest<HTMLElement>("[data-battle-player][data-battle-persona]");
+			if (!card) return null;
+			const player = Number(card.dataset.battlePlayer);
+			const personaId = card.dataset.battlePersona;
+			if ((player !== 0 && player !== 1) || !personaId || player === sourcePlayer) return null;
+			return { player: player as PlayerIndex, personaId };
+		};
+
+		const moveTargetingTrail = (event: PointerEvent) => {
+			const drag = targetingDragRef.current;
+			if (!drag || event.pointerId !== drag.pointerId) return;
+			event.preventDefault();
+			const moved = drag.moved || Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 6;
+			const next = {
+				...drag,
+				currentX: event.clientX,
+				currentY: event.clientY,
+				moved,
+				hoveredTarget: findTarget(event.clientX, event.clientY, drag.sourcePlayer),
+			};
+			targetingDragRef.current = next;
+			setTargetingDrag(next);
+		};
+
+		const finishTargeting = (event: PointerEvent, cancelled = false) => {
+			const drag = targetingDragRef.current;
+			if (!drag || event.pointerId !== drag.pointerId) return;
+			const target = cancelled ? null : findTarget(event.clientX, event.clientY, drag.sourcePlayer);
+			if (drag.moved) {
+				suppressTargetClickRef.current = true;
+				window.setTimeout(() => {
+					suppressTargetClickRef.current = false;
+				}, 0);
+				if (target) damagePersona(target.player, target.personaId, 25);
+				setPendingAction(null);
+			}
+			targetingDragRef.current = null;
+			setTargetingDrag(null);
+		};
+
+		const cancelTargeting = (event: PointerEvent) => finishTargeting(event, true);
+		window.addEventListener("pointermove", moveTargetingTrail, { passive: false });
+		window.addEventListener("pointerup", finishTargeting);
+		window.addEventListener("pointercancel", cancelTargeting);
+		return () => {
+			window.removeEventListener("pointermove", moveTargetingTrail);
+			window.removeEventListener("pointerup", finishTargeting);
+			window.removeEventListener("pointercancel", cancelTargeting);
+		};
+	}, []);
+
+	const resolvePersonaSelection = (player: PlayerIndex, personaId: string) => {
+		if (pendingAction?.kind === "damage") {
+			if (player === pendingAction.sourcePlayer) return;
+			damagePersona(player, personaId, 25);
+			setHoveredBattleTarget(null);
+			setPendingAction(null);
+			return;
+		}
+		if (pendingAction?.kind === "bind-tenacity") {
+			if (player !== pendingAction.player) return;
+			setTenacityBindings((current) => {
+				const next: [string | null, string | null] = [...current];
+				next[player] = personaId;
+				return next;
+			});
+			setPendingAction(null);
+			return;
+		}
+		setSelectedPersonaId(personaId);
+	};
+
+	const requestUltimate = (player: PlayerIndex, source: BattlePersona, persona: Persona) => {
+		setPendingAction(null);
+		setOpenPlayerPanel(null);
+		setPendingUltimate({ player, sourcePersonaId: source.id, personaName: persona.name });
+	};
+
+	const confirmUltimate = () => {
+		if (!pendingUltimate) return;
+		damageTeam(pendingUltimate.player === 0 ? 1 : 0, 40);
+		setBattleTeams((current) => {
+			if (!current) return current;
+			const next = current.map((team) => team.map((entry) => ({ ...entry }))) as BattleTeams;
+			const actingPersona = next[pendingUltimate.player].find((entry) => entry.id === pendingUltimate.sourcePersonaId);
+			if (actingPersona) actingPersona.inert = true;
+			return next;
+		});
+		setPendingUltimate(null);
+	};
+
+	const resetBattle = () => {
+		Object.values(damageTrailTimers.current).forEach((timer) => window.clearTimeout(timer));
+		damageTrailTimers.current = {};
+		Object.values(hitFlashTimers.current).forEach((timer) => window.clearTimeout(timer));
+		hitFlashTimers.current = {};
+		setPhase("setup");
+		setLockedTeams([false, false]);
+		setActivePicker(0);
+		setBattleTeams(null);
+		setTweakPools([0, 0]);
+		setOpenPlayerPanel(null);
+		setSelectedReactionSlot(null);
+		setPendingAction(null);
+		setSettingsMenuOpen(false);
+		setPendingUltimate(null);
+		targetingDragRef.current = null;
+		setTargetingDrag(null);
+	};
+
+	const endTurn = () => {
+		const nextPlayer: PlayerIndex = activePlayer === 0 ? 1 : 0;
+		const generatedTweak = selectedTeams[nextPlayer].reduce((total, personaId) => total + (Number(content.personas.find((persona) => persona.id === personaId)?.tweak) || 0), 0);
+		setTweakPools((current) => {
+			const next: [number, number] = [...current];
+			next[nextPlayer] += generatedTweak;
+			return next;
+		});
+		setPendingAction(null);
+		setOpenPlayerPanel(null);
+		setPendingUltimate(null);
+		targetingDragRef.current = null;
+		setTargetingDrag(null);
+		setActivePlayer(nextPlayer);
+		setTurnNumber((current) => current + 1);
+	};
+
 	return (
-		<div className="page-view play-view screen-enter">
-			<ScreenHeader onMenu={onMenu} content={content} language={language} onLanguageChange={onLanguageChange} musicMuted={musicMuted} onMusicToggle={onMusicToggle} />
-			<main className="play-space" aria-label={content.ui.playAria}>
-				<p>{content.ui.playMessage}</p>
-			</main>
+		<div className={`page-view play-view screen-enter${phase === "battle" ? " is-battle-active" : ""}`}>
+			<ScreenHeader
+				onMenu={onMenu}
+				content={content}
+				language={language}
+				onLanguageChange={onLanguageChange}
+				musicMuted={musicMuted}
+				onMusicToggle={onMusicToggle}
+				collapsible={phase === "battle"}
+				extraAction={phase === "battle" ? { label: content.playtest.resetMatch, onClick: resetBattle } : undefined}
+				menuOpen={phase === "battle" ? settingsMenuOpen : undefined}
+				onMenuOpenChange={setSettingsMenuOpen}
+				hideMenuToggle={phase === "battle"}
+			/>
+
+			{phase === "setup" ? (
+				<main className="play-setup" aria-label={content.ui.playAria}>
+					<header className="playtest-title">
+						<span>{content.playtest.setupEyebrow}</span>
+						<h2>{content.playtest.setupTitle}</h2>
+						<p>{content.playtest.setupIntro}</p>
+					</header>
+
+					<section className="duo-builders" aria-label={content.playtest.setupTitle}>
+						{([0, 1] as PlayerIndex[]).map((player) => {
+							const selectedPersonaIds = selectedTeams[player].filter((personaId): personaId is string => Boolean(personaId));
+							const synergy = findSynergy(content, selectedPersonaIds);
+							return (
+								<article className={`duo-builder${activePicker === player ? " is-active" : ""}${lockedTeams[player] ? " is-locked" : ""}`} key={player}>
+									<button className="duo-builder-select" type="button" onClick={() => !lockedTeams[player] && setActivePicker(player)}>
+										<span>{playerLabels[player]}</span>
+										<small>{replaceTokens(content.playtest.selectionCount, { count: selectedPersonaIds.length })}</small>
+									</button>
+									<div className="duo-builder-slots">
+										{[0, 1].map((slot) => {
+											const persona = content.personas.find((entry) => entry.id === selectedTeams[player][slot]);
+											return (
+												<button className={`duo-builder-slot${persona ? " is-filled" : ""}`} type="button" disabled={lockedTeams[player]} aria-label={`${playerLabels[player]} ${slot + 1}`} onClick={() => openPersonaPicker(player, slot)} key={slot}>
+													{persona ? (
+														<>
+															<PersonaArtwork name={persona.asset} className="duo-builder-image" />
+															<strong>{persona.name}</strong>
+														</>
+													) : (
+														<span>{slot + 1}</span>
+													)}
+												</button>
+											);
+										})}
+									</div>
+									<div className={`duo-synergy-status${synergy ? ` is-${synergy.category.tone}` : ""}`}>
+										<strong>{synergy ? replaceTokens(content.playtest.synergyFound, { type: synergy.category.label }) : content.playtest.noSynergy}</strong>
+										{synergy && <span>{synergy.synergy.personas.map((persona) => persona.name).join(" + ")}</span>}
+									</div>
+									<button className="duo-lock-button" type="button" disabled={selectedPersonaIds.length !== 2} onClick={() => toggleTeamLock(player)}>
+										{lockedTeams[player] ? content.playtest.unlockDuo : content.playtest.lockDuo}
+									</button>
+								</article>
+							);
+						})}
+					</section>
+
+					<section className="playtest-roster" aria-label={content.ui.collection}>
+						{content.personas.map((persona) => {
+							const selectedBy = ([0, 1] as PlayerIndex[]).filter((player) => selectedTeams[player].includes(persona.id));
+							const unavailable = Boolean(persona.placeholder);
+							return (
+								<button
+									className={`playtest-roster-card${selectedTeams[activePicker].includes(persona.id) ? " is-selected" : ""}${unavailable ? " is-unavailable" : ""}`}
+									type="button"
+									disabled={unavailable || lockedTeams[activePicker]}
+									onClick={() => togglePersona(persona)}
+									key={persona.id}
+								>
+									<div className="playtest-roster-art">
+										<PersonaArtwork name={persona.asset} className="playtest-roster-image" />
+										<span>{persona.name}</span>
+										<div className="roster-selection-marks">
+											{selectedBy.map((player) => (
+												<b key={player}>P{player + 1}</b>
+											))}
+										</div>
+									</div>
+									<div className="playtest-roster-copy">
+										<strong>{persona.name}</strong>
+										<small>{unavailable ? content.playtest.unavailable : `${persona.health} ${content.ui.hpShort} · ${persona.tweak} ${content.ui.tweak}`}</small>
+									</div>
+								</button>
+							);
+						})}
+					</section>
+
+					<button className="playtest-start-button" type="button" disabled={!lockedTeams.every(Boolean)} onClick={startBattle}>
+						{content.playtest.startMatch}
+					</button>
+				</main>
+			) : (
+				<main className={`playtest-board${pendingAction ? " has-pending-action" : ""}`} aria-label={content.ui.playAria}>
+					<header className="battle-status-bar">
+						<div>
+							<span>{replaceTokens(content.playtest.turn, { turn: turnNumber })}</span>
+							<strong>{replaceTokens(content.playtest.activeTurn, { player: playerLabels[activePlayer] })}</strong>
+						</div>
+						<span className="unlimited-time">{content.playtest.unlimitedTime}</span>
+						<button type="button" onClick={resetBattle}>
+							{content.playtest.resetMatch}
+						</button>
+					</header>
+
+					{pendingAction && (
+						<div className="battle-action-prompt" role="status">
+							<span>
+								{pendingAction.kind === "damage"
+									? replaceTokens(content.playtest.targetPrompt, { name: content.personas.find((persona) => persona.id === pendingAction.sourcePersonaId)?.name ?? "" })
+									: replaceTokens(content.playtest.bindPrompt, { player: playerLabels[pendingAction.player] })}
+							</span>
+							<button type="button" onClick={() => setPendingAction(null)}>
+								{content.playtest.cancel}
+							</button>
+						</div>
+					)}
+
+					<div className="battlefield">
+						{([1, 0] as PlayerIndex[]).map((player, zoneIndex) => {
+							const opposingPlayer: PlayerIndex = player === 0 ? 1 : 0;
+							return (
+								<section className={`battle-team-zone is-player-${player + 1}${activePlayer === player ? " is-active" : ""}`} key={player}>
+									<header className="battle-team-heading">
+										<div className="battle-player-label">
+											<span>{playerLabels[player]}</span>
+										</div>
+										<div className="battle-nav-actions">
+											<button
+												className={`battle-nav-slot is-reactions${openPlayerPanel?.player === player && openPlayerPanel.kind === "reactions" ? " is-active" : ""}`}
+												type="button"
+												title={content.playtest.reactions}
+												aria-label={content.playtest.reactions}
+												aria-expanded={openPlayerPanel?.player === player && openPlayerPanel.kind === "reactions"}
+												aria-controls={`reaction-rack-${player}`}
+												onClick={() => setOpenPlayerPanel((current) => (current?.player === player && current.kind === "reactions" ? null : { player, kind: "reactions" }))}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true">
+													<path d="M13.5 2 5 13h6l-1 9 9-13h-6l.5-7Z" />
+												</svg>
+											</button>
+											<button
+												className={`battle-nav-slot is-objects${openPlayerPanel?.player === player && openPlayerPanel.kind === "objects" ? " is-active" : ""}`}
+												type="button"
+												title={content.playtest.objects}
+												aria-label={content.playtest.objects}
+												aria-expanded={openPlayerPanel?.player === player && openPlayerPanel.kind === "objects"}
+												aria-controls={`object-rack-${player}`}
+												onClick={() => setOpenPlayerPanel((current) => (current?.player === player && current.kind === "objects" ? null : { player, kind: "objects" }))}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true">
+													<path d="M12 2 20 5v6c0 5.1-3.2 8.8-8 11-4.8-2.2-8-5.9-8-11V5l8-3Z" />
+													<path d="m8.7 12 2.1 2.1 4.7-5" />
+												</svg>
+											</button>
+										</div>
+										<div className="battle-tweak-counter">
+											<span>{content.playtest.tweakPool}:</span>
+											<strong>{tweakPools[player]}</strong>
+										</div>
+										<div className={`battle-card-drawer battle-reaction-rack${openPlayerPanel?.player === player && openPlayerPanel.kind === "reactions" ? " is-open" : ""}`} id={`reaction-rack-${player}`}>
+											<strong className="battle-drawer-title">{content.playtest.reactions}</strong>
+											<div className="battle-drawer-slots">
+												{[0, 1].map((slot) => (
+													<button
+														className={`battle-reaction-slot${selectedReactionSlot?.player === player && selectedReactionSlot.slot === slot ? " is-selected" : ""}`}
+														type="button"
+														title={content.playtest.emptyReaction}
+														aria-label={`${content.playtest.emptyReaction} ${slot + 1}`}
+														onClick={() => setSelectedReactionSlot((current) => (current?.player === player && current.slot === slot ? null : { player, slot }))}
+														key={slot}
+													>
+														{slot + 1}
+													</button>
+												))}
+											</div>
+										</div>
+										<div className={`battle-card-drawer battle-object-drawer${openPlayerPanel?.player === player && openPlayerPanel.kind === "objects" ? " is-open" : ""}`} id={`object-rack-${player}`}>
+											<strong className="battle-drawer-title">{content.playtest.objects}</strong>
+											<div className="battle-object-row">
+												<button
+													className={`battle-object-slot has-object${tenacityBindings[player] ? " is-bound" : ""}`}
+													type="button"
+													onClick={() => {
+														setPendingAction({ kind: "bind-tenacity", player });
+														setOpenPlayerPanel(null);
+													}}
+													title={content.bestiary.object.description}
+												>
+													<svg viewBox="0 0 24 24" aria-hidden="true">
+														<path d="M12 2 20 5v6c0 5.1-3.2 8.8-8 11-4.8-2.2-8-5.9-8-11V5l8-3Z" />
+														<path d="m8.7 12 2.1 2.1 4.7-5" />
+													</svg>
+													<strong>{content.bestiary.object.name}</strong>
+													<small>{tenacityBindings[player] ? replaceTokens(content.playtest.boundTo, { name: content.personas.find((persona) => persona.id === tenacityBindings[player])?.name ?? "" }) : content.bestiary.object.description}</small>
+												</button>
+												{[1, 2].map((slot) => (
+													<div className="battle-object-slot" title={content.playtest.emptyObject} key={slot}>
+														<span>{slot + 1}</span>
+													</div>
+												))}
+											</div>
+										</div>
+									</header>
+									<div className="battle-team-layout">
+										<div className="battle-personas">
+											{battleTeams?.[player].map((battlePersona) => {
+												const persona = content.personas.find((entry) => entry.id === battlePersona.id);
+												if (!persona) return null;
+												const isDefeated = battlePersona.currentHp <= 0;
+												const canAct = activePlayer === player && !battlePersona.inert && !isDefeated;
+												const canReceiveTargetDrag = targetingDrag !== null && targetingDrag.sourcePlayer !== player;
+												const canReceivePending = canReceiveTargetDrag || (pendingAction?.kind === "damage" && pendingAction.sourcePlayer !== player) || (pendingAction?.kind === "bind-tenacity" && pendingAction.player === player);
+												const isAimHovered = targetingDrag?.hoveredTarget?.player === player && targetingDrag.hoveredTarget.personaId === battlePersona.id;
+												const isPointerHovered = canReceivePending && hoveredBattleTarget?.player === player && hoveredBattleTarget.personaId === battlePersona.id;
+												return (
+													<article
+														className={`battle-persona${battlePersona.inert ? " is-inert" : ""}${isDefeated ? " is-defeated" : ""}${canReceivePending ? " is-targetable" : ""}${isAimHovered ? " is-aim-hovered" : ""}${isPointerHovered ? " is-target-hovered" : ""}`}
+														data-battle-player={player}
+														data-battle-persona={battlePersona.id}
+														onPointerEnter={() => {
+															if (canReceivePending) setHoveredBattleTarget({ player, personaId: battlePersona.id });
+														}}
+														onPointerLeave={() => setHoveredBattleTarget((current) => (current?.player === player && current.personaId === battlePersona.id ? null : current))}
+														key={battlePersona.id}
+													>
+														{battlePersona.hitFlash > 0 && <span className="battle-card-hit-flash" key={battlePersona.hitFlash} aria-hidden="true" />}
+														<button className="battle-persona-portrait" type="button" aria-label={replaceTokens(content.playtest.viewKit, { name: persona.name })} onClick={() => resolvePersonaSelection(player, battlePersona.id)}>
+															<PersonaArtwork name={persona.asset} className="battle-persona-image" eager />
+															<span className="battle-persona-fallback">{persona.name}</span>
+															<span className="battle-persona-tweak" aria-label={`${persona.tweak} ${content.ui.tweak}`}>
+																<b>{persona.tweak}</b>
+															</span>
+															<span className="battle-persona-name">
+																<strong>{persona.name}</strong>
+																{battlePersona.inert && <b>{content.playtest.inert}</b>}
+																{isDefeated && <b>{content.playtest.defeated}</b>}
+															</span>
+														</button>
+														<div className="battle-persona-controls">
+															<div className="battle-hp" aria-label={`${battlePersona.currentHp} / ${battlePersona.maxHp} ${content.ui.hpShort}`}>
+																<div className="battle-hp-track">
+																	<span className="battle-hp-damage" style={{ width: `${(battlePersona.damageTrailHp / battlePersona.maxHp) * 100}%` }} />
+																	<span className="battle-hp-current" style={{ width: `${(battlePersona.currentHp / battlePersona.maxHp) * 100}%` }} />
+																	<strong>
+																		{battlePersona.currentHp} / {battlePersona.maxHp}
+																	</strong>
+																</div>
+															</div>
+															<div className="battle-abilities">
+																<button
+																	className={`is-targeted${targetingDrag?.sourcePlayer === player && targetingDrag.sourcePersonaId === battlePersona.id ? " is-dragging" : ""}`}
+																	type="button"
+																	disabled={!canAct}
+																	title={content.playtest.abilityOneHint}
+																	onPointerDown={(event) => beginTargetingDrag(event, player, battlePersona.id)}
+																	onClick={() => {
+																		if (suppressTargetClickRef.current) return;
+																		setHoveredBattleTarget(null);
+																		setPendingAction({ kind: "damage", sourcePlayer: player, sourcePersonaId: battlePersona.id });
+																	}}
+																>
+																	<span className="battle-ability-copy">
+																		<strong>{content.playtest.abilityOne}</strong>
+																	</span>
+																	<b className="battle-ability-cost">{getAbilityCost(persona, "ability1")}</b>
+																</button>
+																<button className="is-area" type="button" disabled={!canAct} title={content.playtest.abilityTwoHint} onClick={() => damageTeam(opposingPlayer, 15)}>
+																	<span className="battle-ability-copy">
+																		<strong>{content.playtest.abilityTwo}</strong>
+																	</span>
+																	<b className="battle-ability-cost">{getAbilityCost(persona, "ability2")}</b>
+																</button>
+																<button className="is-ultimate" type="button" disabled={!canAct} title={content.playtest.ultimateHint} onClick={() => requestUltimate(player, battlePersona, persona)}>
+																	<span className="battle-ability-copy">
+																		<strong>{content.playtest.ultimate}</strong>
+																	</span>
+																	<b className="battle-ability-cost">{getAbilityCost(persona, "ultimate")}</b>
+																</button>
+															</div>
+														</div>
+													</article>
+												);
+											})}
+										</div>
+									</div>
+
+									{zoneIndex === 0 && (
+										<div className="battle-midline">
+											<button
+												className={`battle-settings-toggle${settingsMenuOpen ? " is-open" : ""}`}
+												type="button"
+												aria-label={settingsMenuOpen ? content.ui.closeSettings : content.ui.openSettings}
+												aria-expanded={settingsMenuOpen}
+												onClick={() => setSettingsMenuOpen((open) => !open)}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+													<circle cx="12" cy="12" r="3.2" />
+													<path d="M12 2.5v2.1M12 19.4v2.1M2.5 12h2.1M19.4 12h2.1M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M18.7 5.3l-1.5 1.5M6.8 17.2l-1.5 1.5" />
+													<circle cx="12" cy="12" r="7.4" />
+												</svg>
+											</button>
+											<button className="end-turn-button" type="button" onClick={endTurn}>
+												{content.playtest.endTurn}
+											</button>
+										</div>
+									)}
+								</section>
+							);
+						})}
+					</div>
+				</main>
+			)}
+
+			{targetingDrag && <TargetingTrail drag={targetingDrag} />}
+
+			{personaPicker &&
+				createPortal(
+					<div
+						className="persona-picker-backdrop"
+						role="presentation"
+						onPointerDown={(event) => {
+							if (event.target === event.currentTarget) setPersonaPicker(null);
+						}}
+					>
+						<section className="persona-picker-panel" role="dialog" aria-modal="true" aria-labelledby="persona-picker-title">
+							<header className="persona-picker-header">
+								<div>
+									<span>{playerLabels[personaPicker.player]}</span>
+									<h2 id="persona-picker-title">{replaceTokens(content.playtest.selectionCount, { count: selectedTeams[personaPicker.player].filter(Boolean).length })}</h2>
+								</div>
+								<button type="button" onClick={() => setPersonaPicker(null)}>
+									{content.ui.close}
+								</button>
+							</header>
+							<div className="persona-picker-grid">
+								{content.personas.map((persona) => {
+									const selected = selectedTeams[personaPicker.player].includes(persona.id);
+									return (
+										<article className={`persona-picker-card${selected ? " is-selected" : ""}`} key={persona.id}>
+											<button className="persona-picker-select" type="button" disabled={Boolean(persona.placeholder)} onClick={() => selectPersonaForSlot(persona)}>
+												<div className="persona-picker-art">
+													<PersonaArtwork name={persona.asset} className="persona-picker-image" />
+													<span>{persona.name}</span>
+												</div>
+												<strong>{persona.name}</strong>
+												<span className="persona-picker-subclass">{persona.subclass}</span>
+												<small>
+													<span>
+														{persona.health} {content.ui.hpShort}
+													</span>
+													<span>
+														{persona.tweak} {content.ui.tweak}
+													</span>
+												</small>
+											</button>
+											<button className="persona-picker-details" type="button" aria-label={formatName(content.ui.viewPersonaSheet, persona.name)} onClick={() => setSelectedPersonaId(persona.id)}>
+												{content.ui.viewSheet}
+											</button>
+										</article>
+									);
+								})}
+							</div>
+						</section>
+					</div>,
+					document.body,
+				)}
+
+			{pendingUltimate &&
+				createPortal(
+					<div
+						className="battle-ultimate-backdrop"
+						role="presentation"
+						onPointerDown={(event) => {
+							if (event.target === event.currentTarget) setPendingUltimate(null);
+						}}
+					>
+						<section className="battle-ultimate-panel" role="dialog" aria-modal="true" aria-labelledby="battle-ultimate-title" aria-describedby="battle-ultimate-description">
+							<span className="battle-ultimate-kicker">{content.playtest.ultimate}</span>
+							<h2 id="battle-ultimate-title">{pendingUltimate.personaName}</h2>
+							<p id="battle-ultimate-description">{replaceTokens(content.playtest.confirmUltimate, { name: pendingUltimate.personaName })}</p>
+							<div className="battle-ultimate-actions">
+								<button type="button" autoFocus onClick={() => setPendingUltimate(null)}>
+									{content.playtest.cancel}
+								</button>
+								<button className="confirm" type="button" onClick={confirmUltimate}>
+									{content.playtest.ultimate}
+								</button>
+							</div>
+						</section>
+					</div>,
+					document.body,
+				)}
+
+			{selectedPersona &&
+				createPortal(
+					<div
+						className={`persona-dialog-backdrop${personaPicker ? " is-above-picker" : ""}`}
+						role="presentation"
+						onMouseDown={(event) => {
+							if (event.target === event.currentTarget) setSelectedPersonaId(null);
+						}}
+					>
+						<section className="persona-dialog" role="dialog" aria-modal="true" aria-label={formatName(content.ui.personaSheetFor, selectedPersona.name)}>
+							<header className="persona-dialog-toolbar">
+								<span>{content.ui.personaSheet}</span>
+								<div className="persona-dialog-toolbar-actions">
+									<MusicToggle muted={musicMuted} onToggle={onMusicToggle} content={content} />
+									<LanguageToggle language={language} onChange={onLanguageChange} ariaLabel={content.ui.languageAria} />
+									<button type="button" autoFocus onClick={() => setSelectedPersonaId(null)}>
+										{content.ui.close}
+									</button>
+								</div>
+							</header>
+							<div className="persona-dialog-content">
+								<PersonaCardView persona={selectedPersona} content={content} language={language} />
+							</div>
+						</section>
+					</div>,
+					document.body,
+				)}
 		</div>
 	);
 }
@@ -871,13 +1870,49 @@ function App() {
 	}, [language]);
 
 	useEffect(() => {
+		const scrollLockClass = "is-main-menu-open";
+		const isMenuOpen = view === "menu";
+		const root = document.documentElement;
+		const viewport = window.visualViewport;
+		const syncMenuViewport = () => {
+			const viewportHeight = viewport?.height ?? window.innerHeight;
+			root.style.setProperty("--menu-viewport-height", `${Math.round(viewportHeight)}px`);
+		};
+		const preventMenuOverscroll = (event: TouchEvent) => {
+			if (event.touches.length === 1) event.preventDefault();
+		};
+
+		root.classList.toggle(scrollLockClass, isMenuOpen);
+		document.body.classList.toggle(scrollLockClass, isMenuOpen);
+
+		if (isMenuOpen) {
+			syncMenuViewport();
+			window.scrollTo(0, 0);
+			window.addEventListener("resize", syncMenuViewport);
+			viewport?.addEventListener("resize", syncMenuViewport);
+			viewport?.addEventListener("scroll", syncMenuViewport);
+			document.addEventListener("touchmove", preventMenuOverscroll, { passive: false });
+		}
+
+		return () => {
+			root.classList.remove(scrollLockClass);
+			document.body.classList.remove(scrollLockClass);
+			window.removeEventListener("resize", syncMenuViewport);
+			viewport?.removeEventListener("resize", syncMenuViewport);
+			viewport?.removeEventListener("scroll", syncMenuViewport);
+			document.removeEventListener("touchmove", preventMenuOverscroll);
+		};
+	}, [view]);
+
+	useEffect(() => {
 		const audio = audioRef.current;
 		if (!audio) return;
 
 		audio.volume = 0.28;
-		audio.muted = musicMuted;
+		audio.muted = false;
 		window.localStorage.setItem("duality-music-muted", String(musicMuted));
-		if (!musicMuted) safelyPlay(audio);
+		if (musicMuted) audio.pause();
+		else safelyPlay(audio);
 	}, [musicMuted]);
 
 	useEffect(() => {
@@ -902,8 +1937,8 @@ function App() {
 		const audio = audioRef.current;
 
 		if (audio) {
-			audio.muted = nextMuted;
-			if (!nextMuted) safelyPlay(audio);
+			if (nextMuted) audio.pause();
+			else safelyPlay(audio);
 		}
 
 		setMusicMuted(nextMuted);

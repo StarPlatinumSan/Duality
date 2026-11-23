@@ -9,8 +9,11 @@
 		"ruleSectionsAria": "Sections des règles",
 		"bestiarySectionsAria": "Sections du bestiaire",
 		"languageAria": "Changer la langue",
-		"muteMusic": "Couper la musique",
-		"unmuteMusic": "Réactiver la musique",
+		"openSettings": "Ouvrir le menu de jeu",
+		"closeSettings": "Fermer le menu de jeu",
+		"settings": "Menu de jeu",
+		"muteMusic": "Mettre la musique en pause",
+		"unmuteMusic": "Reprendre la musique",
 		"diceNotation": "{count} dé 6",
 		"diceExplanation": "Nombre de dés à six faces à lancer : {count}.",
 		"collection": "Collection",
@@ -45,6 +48,50 @@
 		"bestiarySubtitle": "Découvrir l’univers",
 		"credits": "Crédits",
 		"creditsSubtitle": "À propos du projet"
+	},
+	"playtest": {
+		"setupEyebrow": "Playtest local",
+		"setupTitle": "Construisez les deux duos",
+		"setupIntro": "Choisissez et verrouillez deux Personas pour chaque camp. Les deux joueurs sont contrôlés sur cet appareil.",
+		"playerOne": "Joueur 1",
+		"playerTwo": "Joueur 2",
+		"selectTeam": "Sélectionner ce duo",
+		"selectionCount": "{count} / 2 sélectionnées",
+		"lockDuo": "Verrouiller le duo",
+		"unlockDuo": "Modifier le duo",
+		"locked": "Verrouillé",
+		"startMatch": "Accéder à la table",
+		"noSynergy": "Aucune synergie enregistrée",
+		"synergyFound": "{type} trouvé",
+		"unavailable": "À venir",
+		"turn": "Tour {turn}",
+		"activeTurn": "Tour de {player}",
+		"unlimitedTime": "Temps illimité",
+		"endTurn": "Terminer le tour",
+		"resetMatch": "Changer les duos",
+		"discard": "Défausse",
+		"discardEmpty": "0 carte",
+		"reactions": "Réactions",
+		"objects": "Objets",
+		"tweakPool": "Tweak",
+		"abilityOne": "Frappe ciblée",
+		"abilityOneHint": "Glissez-la sur une Persona adverse, ou sélectionnez-la puis choisissez une cible. Inflige 25 dégâts.",
+		"abilityTwo": "Assaut divisé",
+		"abilityTwoHint": "Inflige 15 dégâts aux deux Personas adverses.",
+		"ultimate": "Ultime prototype",
+		"ultimateHint": "Inflige 40 dégâts aux deux Personas adverses, puis rend cette Persona Inerte.",
+		"targetPrompt": "Choisissez une Persona adverse pour la Frappe ciblée de {name}.",
+		"bindPrompt": "Choisissez une Persona contrôlée par {player} pour lui lier Ténacité.",
+		"cancel": "Annuler",
+		"inert": "Inerte",
+		"defeated": "Éliminée",
+		"tenacity": "Ténacité",
+		"tenacityDescription": "Liaison prototype seulement. Choisissez la Persona qui porte cet Objet.",
+		"boundTo": "Lié à {name}",
+		"emptyObject": "Emplacement d'Objet vide",
+		"emptyReaction": "Emplacement de Réaction vide",
+		"confirmUltimate": "Utiliser l'Ultime de {name} ? Il inflige 40 dégâts aux deux Personas adverses et rend {name} Inerte.",
+		"viewKit": "Ouvrir la fiche complète de {name}"
 	},
 	"credits": {
 		"eyebrow": "À propos du projet",
@@ -337,6 +384,14 @@
 						],
 						"result": "Bientôt ...",
 						"interaction": "Bientôt ..."
+					},
+					{
+						"personas": [
+							{ "name": "Fred", "role": "Assassin" },
+							{ "name": "Jesus", "role": "DPS" }
+						],
+						"result": "Bientôt ...",
+						"interaction": "Bientôt ..."
 					}
 				]
 			},
@@ -454,6 +509,14 @@
 						"personas": [
 							{ "name": "Victor", "role": "Carry" },
 							{ "name": "Antoine", "role": "Support" }
+						],
+						"result": "Bientôt ...",
+						"interaction": "Bientôt ..."
+					},
+					{
+						"personas": [
+							{ "name": "Fred", "role": "Carry" },
+							{ "name": "Victor", "role": "Support" }
 						],
 						"result": "Bientôt ...",
 						"interaction": "Bientôt ..."
@@ -1026,6 +1089,39 @@
 				}
 			],
 			"ultimateAftermath": "SEB MEURT APRÈS SON LAST STAND"
+		},
+		{
+			"id": "fred",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passif",
+					"name": "Normal t’es Fred",
+					"blocks": [{ "text": "Chaque fois que Fred attaque, il a 50 % de chances de récupérer l’intégralité du Tweak dépensé pour cette capacité." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Capacité 1",
+					"name": "Sports Betting Job",
+					"cost": "Coût variable",
+					"blocks": [{ "text": "Fred peut dépenser 1 Tweak pour infliger 4d6 dégâts. Chaque Tweak supplémentaire dépensé ajoute 2d6 dégâts à l’attaque." }, { "text": "Il attaque ensuite aléatoirement l’une des Personas du duo adverse." }]
+				},
+				{
+					"kind": "ability2",
+					"label": "Capacité 2",
+					"name": "Il est con votre pote",
+					"blocks": [{ "text": "Fred inflige entre 1 et 90 dégâts à la cible de son choix." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultime",
+					"name": "Fred la bière",
+					"blocks": [
+						{ "text": "Fred confère à son allié 25 % de chances de réinitialiser ses capacités après leur utilisation." },
+						{ "text": "Fred déclenche également une succession potentielle d’attaques de zone contre le duo adverse. Chaque attaque inflige 6d6 dégâts et possède 75 % de chances d’être réinitialisée." }
+					]
+				}
+			]
 		},
 		{
 			"id": "antoine",

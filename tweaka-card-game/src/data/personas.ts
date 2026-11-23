@@ -198,6 +198,16 @@ export const personaDefinitions: PersonaDefinition[] = [
 		costs: { ability1: tweak(2), ability2: tweak(5) },
 	},
 	{
+		id: "fred",
+		asset: "Fred",
+		name: "Fred",
+		subclass: "assassin",
+		classOrder: 4,
+		health: 240,
+		tweak: 4,
+		costs: { ability2: tweak(4) },
+	},
+	{
 		id: "antoine",
 		asset: "Antoine",
 		name: "Antoine",

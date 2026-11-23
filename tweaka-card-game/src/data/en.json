@@ -9,8 +9,11 @@
 		"ruleSectionsAria": "Rule sections",
 		"bestiarySectionsAria": "Bestiary sections",
 		"languageAria": "Change language",
-		"muteMusic": "Mute music",
-		"unmuteMusic": "Unmute music",
+		"openSettings": "Open game menu",
+		"closeSettings": "Close game menu",
+		"settings": "Game menu",
+		"muteMusic": "Pause music",
+		"unmuteMusic": "Resume music",
 		"diceNotation": "{count} D6",
 		"diceExplanation": "Number of six-sided dice to roll: {count}.",
 		"collection": "Collection",
@@ -45,6 +48,50 @@
 		"bestiarySubtitle": "Discover the universe",
 		"credits": "Credits",
 		"creditsSubtitle": "About the project"
+	},
+	"playtest": {
+		"setupEyebrow": "Local playtest",
+		"setupTitle": "Build both duos",
+		"setupIntro": "Choose and lock two Personas for each side. Both players are controlled on this device.",
+		"playerOne": "Player 1",
+		"playerTwo": "Player 2",
+		"selectTeam": "Select this duo",
+		"selectionCount": "{count} / 2 selected",
+		"lockDuo": "Lock duo",
+		"unlockDuo": "Edit duo",
+		"locked": "Locked",
+		"startMatch": "Enter the table",
+		"noSynergy": "No registered synergy",
+		"synergyFound": "{type} found",
+		"unavailable": "Coming soon",
+		"turn": "Turn {turn}",
+		"activeTurn": "{player}'s turn",
+		"unlimitedTime": "Unlimited time",
+		"endTurn": "End turn",
+		"resetMatch": "Change duos",
+		"discard": "Discard",
+		"discardEmpty": "0 cards",
+		"reactions": "Reactions",
+		"objects": "Objects",
+		"tweakPool": "Tweak",
+		"abilityOne": "Target Strike",
+		"abilityOneHint": "Drag onto an opposing Persona, or select it and then choose a target. Deals 25 damage.",
+		"abilityTwo": "Split Assault",
+		"abilityTwoHint": "Deals 15 damage to both opposing Personas.",
+		"ultimate": "Prototype Ultimate",
+		"ultimateHint": "Deals 40 damage to both opposing Personas, then makes this Persona Inert.",
+		"targetPrompt": "Choose an opposing Persona for {name}'s Target Strike.",
+		"bindPrompt": "Choose a Persona controlled by {player} to bind Tenacity.",
+		"cancel": "Cancel",
+		"inert": "Inert",
+		"defeated": "Defeated",
+		"tenacity": "Tenacity",
+		"tenacityDescription": "Prototype binding only. Select which Persona carries this Object.",
+		"boundTo": "Bound to {name}",
+		"emptyObject": "Empty Object slot",
+		"emptyReaction": "Empty Reaction slot",
+		"confirmUltimate": "Use {name}'s Ultimate? It deals 40 damage to both opposing Personas and makes {name} Inert.",
+		"viewKit": "Open {name}'s full kit"
 	},
 	"credits": {
 		"eyebrow": "About the project",
@@ -334,6 +381,14 @@
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Fred", "role": "Assassin" },
+							{ "name": "Jesus", "role": "DPS" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
 					}
 				]
 			},
@@ -451,6 +506,14 @@
 						"personas": [
 							{ "name": "Victor", "role": "Carry" },
 							{ "name": "Antoine", "role": "Support" }
+						],
+						"result": "Coming Soon ...",
+						"interaction": "Coming Soon ..."
+					},
+					{
+						"personas": [
+							{ "name": "Fred", "role": "Carry" },
+							{ "name": "Victor", "role": "Support" }
 						],
 						"result": "Coming Soon ...",
 						"interaction": "Coming Soon ..."
@@ -1012,6 +1075,42 @@
 				}
 			],
 			"ultimateAftermath": "SEB DIES AFTER HIS LAST STAND"
+		},
+		{
+			"id": "fred",
+			"abilities": [
+				{
+					"kind": "passive",
+					"label": "Passive",
+					"name": "Normal t’es Fred",
+					"blocks": [{ "text": "Whenever Fred attacks, he has a 50% chance to regain all the Tweak spent on that ability." }]
+				},
+				{
+					"kind": "ability1",
+					"label": "Ability 1",
+					"name": "Sports Betting Job",
+					"cost": "Variable cost",
+					"blocks": [
+						{ "text": "Fred can spend 1 Tweak to deal 4d6 damage. Each additional Tweak spent adds 2d6 damage to the attack." },
+						{ "text": "He then attacks one random Persona from the opposing duo." }
+					]
+				},
+				{
+					"kind": "ability2",
+					"label": "Ability 2",
+					"name": "Il est con votre pote",
+					"blocks": [{ "text": "Fred deals between 1 and 90 damage to a target of his choice." }]
+				},
+				{
+					"kind": "ultimate",
+					"label": "Ultimate",
+					"name": "Fred la bière",
+					"blocks": [
+						{ "text": "Fred grants his ally a 25% chance to reset their abilities after use." },
+						{ "text": "Fred also begins a potential succession of area attacks against the opposing duo. Each attack deals 6d6 damage and has a 75% chance to reset." }
+					]
+				}
+			]
 		},
 		{
 			"id": "antoine",
