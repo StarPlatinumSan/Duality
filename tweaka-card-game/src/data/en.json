@@ -52,7 +52,7 @@
 	"playtest": {
 		"setupEyebrow": "Local playtest",
 		"setupTitle": "Build both duos",
-		"setupIntro": "Choose and lock two Personas for each side. Both players are controlled on this device.",
+		"setupIntro": "Choose two Personas for each side. Both players are controlled on this device.",
 		"playerOne": "Player 1",
 		"playerTwo": "Player 2",
 		"selectTeam": "Select this duo",

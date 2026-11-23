@@ -52,7 +52,7 @@
 	"playtest": {
 		"setupEyebrow": "Playtest local",
 		"setupTitle": "Construisez les deux duos",
-		"setupIntro": "Choisissez et verrouillez deux Personas pour chaque camp. Les deux joueurs sont contrôlés sur cet appareil.",
+		"setupIntro": "Choisissez deux Personas pour chaque camp. Les deux joueurs sont contrôlés sur cet appareil.",
 		"playerOne": "Joueur 1",
 		"playerTwo": "Joueur 2",
 		"selectTeam": "Sélectionner ce duo",

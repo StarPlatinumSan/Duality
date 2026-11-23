@@ -398,7 +398,6 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 		[null, null],
 		[null, null],
 	]);
-	const [lockedTeams, setLockedTeams] = useState<[boolean, boolean]>([false, false]);
 	const [battleTeams, setBattleTeams] = useState<BattleTeams | null>(null);
 	const [activePlayer, setActivePlayer] = useState<PlayerIndex>(0);
 	const [turnNumber, setTurnNumber] = useState(1);
@@ -651,7 +650,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 	);
 
 	const togglePersona = (persona: Persona) => {
-		if (persona.placeholder || lockedTeams[activePicker]) return;
+		if (persona.placeholder) return;
 		setSelectedTeams((current) => {
 			const next: SelectedTeams = [[...current[0]], [...current[1]]];
 			const selected = next[activePicker];
@@ -666,14 +665,13 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 	};
 
 	const openPersonaPicker = (player: PlayerIndex, slot: number) => {
-		if (lockedTeams[player]) return;
 		setActivePicker(player);
 		if (window.matchMedia("(max-width: 680px)").matches) setPersonaPicker({ player, slot });
 		else setPersonaPicker(null);
 	};
 
 	const selectPersonaForSlot = (persona: Persona) => {
-		if (!personaPicker || persona.placeholder || lockedTeams[personaPicker.player]) return;
+		if (!personaPicker || persona.placeholder) return;
 		setSelectedTeams((current) => {
 			const next: SelectedTeams = [[...current[0]], [...current[1]]];
 			const team = next[personaPicker.player];
@@ -686,19 +684,8 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 		setPersonaPicker(null);
 	};
 
-	const toggleTeamLock = (player: PlayerIndex) => {
-		if (selectedTeams[player].some((personaId) => !personaId)) return;
-		const wasLocked = lockedTeams[player];
-		setLockedTeams((current) => {
-			const next: [boolean, boolean] = [...current];
-			next[player] = !current[player];
-			return next;
-		});
-		setActivePicker(wasLocked ? player : player === 0 ? 1 : 0);
-	};
-
 	const startBattle = () => {
-		if (!lockedTeams.every(Boolean)) return;
+		if (!selectedTeams.every((team) => team.every(Boolean))) return;
 		const teams = selectedTeams.map((team) =>
 			team
 				.filter((personaId): personaId is string => Boolean(personaId))
@@ -919,7 +906,6 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 		setTweakOrbs([]);
 		setTweakGainPlayer(null);
 		setPhase("setup");
-		setLockedTeams([false, false]);
 		setActivePicker(0);
 		setBattleTeams(null);
 		setTweakPools([0, 0]);
@@ -1026,8 +1012,8 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 							const selectedPersonaIds = selectedTeams[player].filter((personaId): personaId is string => Boolean(personaId));
 							const synergy = findSynergy(content, selectedPersonaIds);
 							return (
-								<article className={`duo-builder${activePicker === player ? " is-active" : ""}${lockedTeams[player] ? " is-locked" : ""}`} key={player}>
-									<button className="duo-builder-select" type="button" onClick={() => !lockedTeams[player] && setActivePicker(player)}>
+								<article className={`duo-builder${activePicker === player ? " is-active" : ""}`} key={player}>
+									<button className="duo-builder-select" type="button" onClick={() => setActivePicker(player)}>
 										<span>{playerLabels[player]}</span>
 										<small>{replaceTokens(content.playtest.selectionCount, { count: selectedPersonaIds.length })}</small>
 									</button>
@@ -1038,7 +1024,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 											const usesFullArt = persona ? hasFullArt && Boolean(fullArtChoices[persona.id]) : false;
 											return (
 												<div className={`duo-builder-slot${persona ? " is-filled" : ""}${usesFullArt ? " is-full-art" : ""}`} key={slot}>
-													<button className="duo-builder-slot-select" type="button" disabled={lockedTeams[player]} aria-label={`${playerLabels[player]} ${slot + 1}`} onClick={() => openPersonaPicker(player, slot)}>
+											<button className="duo-builder-slot-select" type="button" aria-label={`${playerLabels[player]} ${slot + 1}`} onClick={() => openPersonaPicker(player, slot)}>
 														{persona ? (
 															<>
 																<PersonaArtwork name={usesFullArt ? `${persona.asset}FullArt` : persona.asset} className="duo-builder-image" />
@@ -1080,9 +1066,6 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 										<strong>{synergy ? replaceTokens(content.playtest.synergyFound, { type: synergy.category.label }) : content.playtest.noSynergy}</strong>
 										{synergy && <span>{synergy.synergy.personas.map((persona) => persona.name).join(" + ")}</span>}
 									</div>
-									<button className="duo-lock-button" type="button" disabled={selectedPersonaIds.length !== 2} onClick={() => toggleTeamLock(player)}>
-										{lockedTeams[player] ? content.playtest.unlockDuo : content.playtest.lockDuo}
-									</button>
 								</article>
 							);
 						})}
@@ -1096,7 +1079,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 								<button
 									className={`playtest-roster-card${selectedTeams[activePicker].includes(persona.id) ? " is-selected" : ""}${unavailable ? " is-unavailable" : ""}`}
 									type="button"
-									disabled={unavailable || lockedTeams[activePicker]}
+								disabled={unavailable}
 									onClick={() => togglePersona(persona)}
 									key={persona.id}
 								>
@@ -1118,7 +1101,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 						})}
 					</section>
 
-					<button className="playtest-start-button" type="button" disabled={!lockedTeams.every(Boolean)} onClick={startBattle}>
+					<button className="playtest-start-button" type="button" disabled={!selectedTeams.every((team) => team.every(Boolean))} onClick={startBattle}>
 						{content.playtest.startMatch}
 					</button>
 				</main>
@@ -1331,12 +1314,9 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 												aria-expanded={settingsMenuOpen}
 												onClick={() => setSettingsMenuOpen((open) => !open)}
 											>
-												<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-													<circle cx="12" cy="12" r="3.2" />
-													<path d="M12 2.5v2.1M12 19.4v2.1M2.5 12h2.1M19.4 12h2.1M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M18.7 5.3l-1.5 1.5M6.8 17.2l-1.5 1.5" />
-													<circle cx="12" cy="12" r="7.4" />
-												</svg>
+											Menu
 											</button>
+										<strong className="battle-versus" aria-hidden="true">VS</strong>
 											<button className="end-turn-button" type="button" onClick={endTurn}>
 												{content.playtest.endTurn}
 											</button>
