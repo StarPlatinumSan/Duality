@@ -264,7 +264,7 @@
 			"type": "Réaction",
 			"badge": "1 Tweak",
 			"name": "Toppe",
-			"description": "Une fois par tour, dépensez 1 Tweak pour soigner une carte de 20 PV. Chaque utilisation supplémentaire augmente son coût de 1 Tweak."
+			"description": "Dépensez 1 Tweak pour soigner une carte de 20 PV."
 		},
 		"synergies": [
 			{

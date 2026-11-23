@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useId, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import "./App.css";
 import { contentByLanguage, type BestiarySection, type GameContent, type Language, type Persona, type RuleCard, type SynergyTone, type View } from "./data/content";
 import hitSoundUrl from "./audio/hit.mp3";
+import popSoundUrl from "./audio/pop.mp3";
 import backgroundMusic from "./music/veritas.mp3";
 
 const HIT_SOUND_VOLUME = 0.32;
+const POP_SOUND_VOLUME = 0.2;
 
 type MusicControlProps = {
 	musicMuted: boolean;
@@ -325,6 +327,15 @@ type TargetingDrag = {
 	moved: boolean;
 	hoveredTarget: { player: PlayerIndex; personaId: string } | null;
 };
+type TweakOrb = {
+	id: number;
+	startX: number;
+	startY: number;
+	deltaX: number;
+	deltaY: number;
+	delay: number;
+	duration: number;
+};
 
 function TargetingTrail({ drag }: { drag: TargetingDrag }) {
 	return createPortal(
@@ -334,6 +345,25 @@ function TargetingTrail({ drag }: { drag: TargetingDrag }) {
 			<circle className="battle-targeting-reticle" cx={drag.currentX} cy={drag.currentY} r="12" />
 			<circle className="battle-targeting-point" cx={drag.currentX} cy={drag.currentY} r="3" />
 		</svg>,
+		document.body,
+	);
+}
+
+function TweakOrbLayer({ orbs }: { orbs: TweakOrb[] }) {
+	return createPortal(
+		<div className="tweak-orb-layer" aria-hidden="true">
+			{orbs.map((orb) => {
+				const style = {
+					left: `${orb.startX}px`,
+					top: `${orb.startY}px`,
+					"--tweak-orb-x": `${orb.deltaX}px`,
+					"--tweak-orb-y": `${orb.deltaY}px`,
+					"--tweak-orb-delay": `${orb.delay}ms`,
+					"--tweak-orb-duration": `${orb.duration}ms`,
+				} as CSSProperties;
+				return <span className="tweak-gain-orb" style={style} key={orb.id} />;
+			})}
+		</div>,
 		document.body,
 	);
 }
@@ -382,13 +412,25 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 	const [targetingDrag, setTargetingDrag] = useState<TargetingDrag | null>(null);
 	const [hoveredBattleTarget, setHoveredBattleTarget] = useState<{ player: PlayerIndex; personaId: string } | null>(null);
 	const [pendingUltimate, setPendingUltimate] = useState<PendingUltimate>(null);
+	const [tweakOrbs, setTweakOrbs] = useState<TweakOrb[]>([]);
+	const [tweakGainPlayer, setTweakGainPlayer] = useState<PlayerIndex | null>(null);
+	const [fullArtAvailability, setFullArtAvailability] = useState<Record<string, boolean>>({});
+	const [fullArtChoices, setFullArtChoices] = useState<Record<string, boolean>>({});
 	const damageTrailTimers = useRef<Record<string, number>>({});
 	const hitFlashTimers = useRef<Record<string, number>>({});
+	const tweakOrbTimerRef = useRef<number | null>(null);
+	const tweakOrbSequenceRef = useRef(0);
 	const hitAudioContextRef = useRef<AudioContext | null>(null);
 	const hitAudioBufferRef = useRef<AudioBuffer | null>(null);
 	const hitAudioOffsetRef = useRef(0);
 	const hitAudioLoadRef = useRef<Promise<void> | null>(null);
 	const hitFallbackAudioRef = useRef<HTMLAudioElement | null>(null);
+	const popAudioBufferRef = useRef<AudioBuffer | null>(null);
+	const popAudioOffsetRef = useRef(0);
+	const popAudioLoadRef = useRef<Promise<void> | null>(null);
+	const popFallbackAudioRef = useRef<HTMLAudioElement | null>(null);
+	const popArrivalTimersRef = useRef<number[]>([]);
+	const popScheduledSourcesRef = useRef<AudioBufferSourceNode[]>([]);
 	const targetingDragRef = useRef<TargetingDrag | null>(null);
 	const suppressTargetClickRef = useRef(false);
 	const selectedPersona = selectedPersonaId ? (content.personas.find((persona) => persona.id === selectedPersonaId) ?? null) : null;
@@ -442,6 +484,84 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 		void prepareHitSound();
 	}, [prepareHitSound]);
 
+	const preparePopSound = useCallback(() => {
+		if (popAudioBufferRef.current) return Promise.resolve();
+		if (popAudioLoadRef.current) return popAudioLoadRef.current;
+
+		popAudioLoadRef.current = (async () => {
+			const AudioContextConstructor = window.AudioContext ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+			if (!AudioContextConstructor) return;
+
+			const context = hitAudioContextRef.current ?? new AudioContextConstructor({ latencyHint: "interactive" });
+			hitAudioContextRef.current = context;
+			const response = await fetch(popSoundUrl);
+			if (!response.ok) throw new Error(`Unable to load pop sound: ${response.status}`);
+			const buffer = await context.decodeAudioData(await response.arrayBuffer());
+			popAudioBufferRef.current = buffer;
+			popAudioOffsetRef.current = findImpactOffset(buffer);
+		})().catch(() => undefined);
+
+		return popAudioLoadRef.current;
+	}, []);
+
+	const clearScheduledPopSounds = useCallback(() => {
+		popArrivalTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+		popArrivalTimersRef.current = [];
+		popScheduledSourcesRef.current.forEach((source) => {
+			try {
+				source.stop();
+			} catch {
+				// The source already finished naturally.
+			}
+		});
+		popScheduledSourcesRef.current = [];
+	}, []);
+
+	const schedulePopSounds = useCallback(
+		(orbs: TweakOrb[]) => {
+			clearScheduledPopSounds();
+			const context = hitAudioContextRef.current;
+			const buffer = popAudioBufferRef.current;
+
+			if (context && buffer && context.state === "running") {
+				const startTime = context.currentTime;
+				orbs.forEach((orb) => {
+					const source = context.createBufferSource();
+					const gain = context.createGain();
+					source.buffer = buffer;
+					gain.gain.value = POP_SOUND_VOLUME;
+					source.connect(gain);
+					gain.connect(context.destination);
+					source.start(startTime + (orb.delay + orb.duration) / 1000, popAudioOffsetRef.current);
+					popScheduledSourcesRef.current.push(source);
+					source.onended = () => {
+						popScheduledSourcesRef.current = popScheduledSourcesRef.current.filter((entry) => entry !== source);
+					};
+				});
+				return;
+			}
+
+			if (context?.state === "suspended") void context.resume();
+			orbs.forEach((orb) => {
+				const timer = window.setTimeout(() => {
+					const template = popFallbackAudioRef.current;
+					if (!template) return;
+					const audio = template.cloneNode(true) as HTMLAudioElement;
+					audio.volume = POP_SOUND_VOLUME;
+					try {
+						audio.currentTime = popAudioOffsetRef.current;
+					} catch {
+						audio.currentTime = 0;
+					}
+					safelyPlay(audio);
+				}, orb.delay + orb.duration);
+				popArrivalTimersRef.current.push(timer);
+			});
+			void preparePopSound();
+		},
+		[clearScheduledPopSounds, preparePopSound],
+	);
+
 	useEffect(() => {
 		if (!selectedPersonaId) return;
 		const previousOverflow = document.body.style.overflow;
@@ -480,10 +600,17 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 		fallback.volume = HIT_SOUND_VOLUME;
 		fallback.load();
 		hitFallbackAudioRef.current = fallback;
+		const popFallback = new Audio(popSoundUrl);
+		popFallback.preload = "auto";
+		popFallback.volume = POP_SOUND_VOLUME;
+		popFallback.load();
+		popFallbackAudioRef.current = popFallback;
 		void prepareHitSound();
+		void preparePopSound();
 
 		const unlockHitAudio = () => {
 			void prepareHitSound();
+			void preparePopSound();
 			const context = hitAudioContextRef.current;
 			if (context?.state === "suspended") void context.resume();
 		};
@@ -496,18 +623,29 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 			window.removeEventListener("keydown", unlockHitAudio, true);
 			fallback.pause();
 			hitFallbackAudioRef.current = null;
+			popFallback.pause();
+			popFallbackAudioRef.current = null;
+			clearScheduledPopSounds();
 			const context = hitAudioContextRef.current;
 			if (context && context.state !== "closed") void context.close();
 			hitAudioContextRef.current = null;
 			hitAudioBufferRef.current = null;
 			hitAudioLoadRef.current = null;
+			popAudioBufferRef.current = null;
+			popAudioLoadRef.current = null;
 		};
-	}, [prepareHitSound]);
+	}, [clearScheduledPopSounds, prepareHitSound, preparePopSound]);
+
+	useEffect(() => {
+		if (tweakOrbs.length === 0) return;
+		schedulePopSounds(tweakOrbs);
+	}, [schedulePopSounds, tweakOrbs]);
 
 	useEffect(
 		() => () => {
 			Object.values(damageTrailTimers.current).forEach((timer) => window.clearTimeout(timer));
 			Object.values(hitFlashTimers.current).forEach((timer) => window.clearTimeout(timer));
+			if (tweakOrbTimerRef.current !== null) window.clearTimeout(tweakOrbTimerRef.current);
 		},
 		[],
 	);
@@ -775,6 +913,11 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 		damageTrailTimers.current = {};
 		Object.values(hitFlashTimers.current).forEach((timer) => window.clearTimeout(timer));
 		hitFlashTimers.current = {};
+		if (tweakOrbTimerRef.current !== null) window.clearTimeout(tweakOrbTimerRef.current);
+		tweakOrbTimerRef.current = null;
+		clearScheduledPopSounds();
+		setTweakOrbs([]);
+		setTweakGainPlayer(null);
 		setPhase("setup");
 		setLockedTeams([false, false]);
 		setActivePicker(0);
@@ -789,9 +932,57 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 		setTargetingDrag(null);
 	};
 
+	const animateTweakGain = (player: PlayerIndex) => {
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		const target = document.querySelector<HTMLElement>(`.battle-team-zone.is-player-${player + 1} .battle-tweak-counter`);
+		if (!target) return;
+
+		const targetBounds = target.getBoundingClientRect();
+		const targetX = targetBounds.left + targetBounds.width / 2;
+		const targetY = targetBounds.top + targetBounds.height / 2;
+		const orbs: TweakOrb[] = [];
+
+		selectedTeams[player].forEach((personaId, personaIndex) => {
+			if (!personaId) return;
+			const persona = content.personas.find((entry) => entry.id === personaId);
+			const production = Math.max(0, Math.floor(Number(persona?.tweak) || 0));
+			const source = document.querySelector<HTMLElement>(`[data-battle-player="${player}"][data-battle-persona="${personaId}"] .battle-persona-tweak`);
+			if (!source || production === 0) return;
+
+			const sourceBounds = source.getBoundingClientRect();
+			const sourceX = sourceBounds.left + sourceBounds.width / 2;
+			const sourceY = sourceBounds.top + sourceBounds.height / 2;
+			for (let orbIndex = 0; orbIndex < production; orbIndex += 1) {
+				const spread = (orbIndex - (production - 1) / 2) * 1.5;
+				const destinationSpread = ((orbIndex + personaIndex) % 3 - 1) * 2.5;
+				orbs.push({
+					id: ++tweakOrbSequenceRef.current,
+					startX: sourceX + spread,
+					startY: sourceY,
+					deltaX: targetX + destinationSpread - sourceX - spread,
+					deltaY: targetY - sourceY,
+					delay: personaIndex * 65 + orbIndex * 55,
+					duration: 560 + (orbIndex % 2) * 45,
+				});
+			}
+		});
+
+		if (orbs.length === 0) return;
+		if (tweakOrbTimerRef.current !== null) window.clearTimeout(tweakOrbTimerRef.current);
+		setTweakOrbs(orbs);
+		setTweakGainPlayer(player);
+		const animationLength = Math.max(...orbs.map((orb) => orb.delay + orb.duration)) + 100;
+		tweakOrbTimerRef.current = window.setTimeout(() => {
+			setTweakOrbs([]);
+			setTweakGainPlayer(null);
+			tweakOrbTimerRef.current = null;
+		}, animationLength);
+	};
+
 	const endTurn = () => {
 		const nextPlayer: PlayerIndex = activePlayer === 0 ? 1 : 0;
 		const generatedTweak = selectedTeams[nextPlayer].reduce((total, personaId) => total + (Number(content.personas.find((persona) => persona.id === personaId)?.tweak) || 0), 0);
+		animateTweakGain(nextPlayer);
 		setTweakPools((current) => {
 			const next: [number, number] = [...current];
 			next[nextPlayer] += generatedTweak;
@@ -843,17 +1034,45 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 									<div className="duo-builder-slots">
 										{[0, 1].map((slot) => {
 											const persona = content.personas.find((entry) => entry.id === selectedTeams[player][slot]);
+											const hasFullArt = persona ? Boolean(fullArtAvailability[persona.id]) : false;
+											const usesFullArt = persona ? hasFullArt && Boolean(fullArtChoices[persona.id]) : false;
 											return (
-												<button className={`duo-builder-slot${persona ? " is-filled" : ""}`} type="button" disabled={lockedTeams[player]} aria-label={`${playerLabels[player]} ${slot + 1}`} onClick={() => openPersonaPicker(player, slot)} key={slot}>
-													{persona ? (
+												<div className={`duo-builder-slot${persona ? " is-filled" : ""}${usesFullArt ? " is-full-art" : ""}`} key={slot}>
+													<button className="duo-builder-slot-select" type="button" disabled={lockedTeams[player]} aria-label={`${playerLabels[player]} ${slot + 1}`} onClick={() => openPersonaPicker(player, slot)}>
+														{persona ? (
+															<>
+																<PersonaArtwork name={usesFullArt ? `${persona.asset}FullArt` : persona.asset} className="duo-builder-image" />
+																<strong>{persona.name}</strong>
+															</>
+														) : (
+															<span>{slot + 1}</span>
+														)}
+													</button>
+													{persona && (
 														<>
-															<PersonaArtwork name={persona.asset} className="duo-builder-image" />
-															<strong>{persona.name}</strong>
+															<PersonaArtwork
+																name={`${persona.asset}FullArt`}
+																className="duo-full-art-probe"
+																eager
+																onAvailabilityChange={(isAvailable) =>
+																	setFullArtAvailability((current) => (current[persona.id] === isAvailable ? current : { ...current, [persona.id]: isAvailable }))
+																}
+															/>
+															<button
+																className={`duo-full-art-toggle${usesFullArt ? " is-checked" : ""}`}
+																type="button"
+																disabled={!hasFullArt}
+																aria-pressed={usesFullArt}
+																aria-label={`${content.ui.fullArt}: ${persona.name}`}
+																title={hasFullArt ? content.ui.fullArt : content.playtest.unavailable}
+																onClick={() => setFullArtChoices((current) => ({ ...current, [persona.id]: !current[persona.id] }))}
+															>
+																<span aria-hidden="true" />
+																{content.ui.fullArt}
+															</button>
 														</>
-													) : (
-														<span>{slot + 1}</span>
 													)}
-												</button>
+												</div>
 											);
 										})}
 									</div>
@@ -933,7 +1152,8 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 						{([1, 0] as PlayerIndex[]).map((player, zoneIndex) => {
 							const opposingPlayer: PlayerIndex = player === 0 ? 1 : 0;
 							return (
-								<section className={`battle-team-zone is-player-${player + 1}${activePlayer === player ? " is-active" : ""}`} key={player}>
+								<Fragment key={player}>
+									<section className={`battle-team-zone is-player-${player + 1}${activePlayer === player ? " is-active" : ""}`}>
 									<header className="battle-team-heading">
 										<div className="battle-player-label">
 											<span>{playerLabels[player]}</span>
@@ -967,7 +1187,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 												</svg>
 											</button>
 										</div>
-										<div className="battle-tweak-counter">
+										<div className={`battle-tweak-counter${tweakGainPlayer === player ? " is-receiving" : ""}`}>
 											<span>{content.playtest.tweakPool}:</span>
 											<strong>{tweakPools[player]}</strong>
 										</div>
@@ -1020,6 +1240,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 											{battleTeams?.[player].map((battlePersona) => {
 												const persona = content.personas.find((entry) => entry.id === battlePersona.id);
 												if (!persona) return null;
+												const usesFullArt = Boolean(fullArtChoices[persona.id] && fullArtAvailability[persona.id]);
 												const isDefeated = battlePersona.currentHp <= 0;
 												const canAct = activePlayer === player && !battlePersona.inert && !isDefeated;
 												const canReceiveTargetDrag = targetingDrag !== null && targetingDrag.sourcePlayer !== player;
@@ -1028,7 +1249,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 												const isPointerHovered = canReceivePending && hoveredBattleTarget?.player === player && hoveredBattleTarget.personaId === battlePersona.id;
 												return (
 													<article
-														className={`battle-persona${battlePersona.inert ? " is-inert" : ""}${isDefeated ? " is-defeated" : ""}${canReceivePending ? " is-targetable" : ""}${isAimHovered ? " is-aim-hovered" : ""}${isPointerHovered ? " is-target-hovered" : ""}`}
+													className={`battle-persona${usesFullArt ? " is-full-art" : ""}${activePlayer !== player ? " is-turn-inactive" : ""}${battlePersona.inert ? " is-inert" : ""}${isDefeated ? " is-defeated" : ""}${canReceivePending ? " is-targetable" : ""}${isAimHovered ? " is-aim-hovered" : ""}${isPointerHovered ? " is-target-hovered" : ""}`}
 														data-battle-player={player}
 														data-battle-persona={battlePersona.id}
 														onPointerEnter={() => {
@@ -1038,8 +1259,9 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 														key={battlePersona.id}
 													>
 														{battlePersona.hitFlash > 0 && <span className="battle-card-hit-flash" key={battlePersona.hitFlash} aria-hidden="true" />}
+													{usesFullArt && <PersonaArtwork name={`${persona.asset}FullArt`} className="battle-persona-full-art-background" eager />}
 														<button className="battle-persona-portrait" type="button" aria-label={replaceTokens(content.playtest.viewKit, { name: persona.name })} onClick={() => resolvePersonaSelection(player, battlePersona.id)}>
-															<PersonaArtwork name={persona.asset} className="battle-persona-image" eager />
+														<PersonaArtwork name={usesFullArt ? `${persona.asset}FullArt` : persona.asset} className="battle-persona-image" eager />
 															<span className="battle-persona-fallback">{persona.name}</span>
 															<span className="battle-persona-tweak" aria-label={`${persona.tweak} ${content.ui.tweak}`}>
 																<b>{persona.tweak}</b>
@@ -1098,6 +1320,8 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 										</div>
 									</div>
 
+									</section>
+
 									{zoneIndex === 0 && (
 										<div className="battle-midline">
 											<button
@@ -1118,7 +1342,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 											</button>
 										</div>
 									)}
-								</section>
+								</Fragment>
 							);
 						})}
 					</div>
@@ -1126,6 +1350,7 @@ function Play({ onMenu, content, language, onLanguageChange, musicMuted, onMusic
 			)}
 
 			{targetingDrag && <TargetingTrail drag={targetingDrag} />}
+			{tweakOrbs.length > 0 && <TweakOrbLayer orbs={tweakOrbs} />}
 
 			{personaPicker &&
 				createPortal(
@@ -1417,6 +1642,11 @@ function Rules({ onMenu, content, language, onLanguageChange, musicMuted, onMusi
 function PersonaArtwork({ name, className, eager = false, onAvailabilityChange }: { name: string; className: string; eager?: boolean; onAvailabilityChange?: (isAvailable: boolean) => void }) {
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [hasFailed, setHasFailed] = useState(false);
+
+	useEffect(() => {
+		setIsLoaded(false);
+		setHasFailed(false);
+	}, [name]);
 
 	if (hasFailed) return null;
 
