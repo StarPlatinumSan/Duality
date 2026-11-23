@@ -67,7 +67,7 @@
 		"turn": "Tour {turn}",
 		"activeTurn": "Tour de {player}",
 		"unlimitedTime": "Temps illimité",
-		"endTurn": "Terminer le tour",
+		"endTurn": "Terminer tour",
 		"resetMatch": "Changer les duos",
 		"discard": "Défausse",
 		"discardEmpty": "0 carte",
