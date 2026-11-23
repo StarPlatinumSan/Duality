@@ -1635,6 +1635,14 @@
 	opacity: 0;
 }
 
+.battle-persona[data-battle-persona="andrei"]:not(.is-full-art) .battle-persona-image.is-loaded {
+	transform: scale(1.055);
+}
+
+.battle-persona[data-battle-persona="andrei"]:not(.is-full-art) .battle-persona-portrait:hover .battle-persona-image.is-loaded {
+	transform: scale(1.075);
+}
+
 .battle-persona.is-full-art .battle-persona-controls {
 	background: transparent;
 }
